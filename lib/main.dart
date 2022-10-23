@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:omni_mobile_app/screens/auth/authenticate.dart';
+import 'package:omni_mobile_app/screens/auth/login.dart';
+import 'package:omni_mobile_app/screens/auth/register.dart';
 import 'package:omni_mobile_app/screens/index.dart';
+import 'package:omni_mobile_app/screens/product_detail/product_detail.dart';
 import 'package:omni_mobile_app/screens/profile/profile.dart';
 import 'package:omni_mobile_app/services/category/category.dart';
 import 'package:provider/provider.dart';
@@ -65,7 +69,10 @@ class _MyHomePageState extends State<MyHomePage> {
         initialRoute: '/',
         routes: {
           '/': (context) => Index(),
-          'profile':(context) => Profile()
+          'productdetail' : (context) => ProductDetail(),
+          'profile':(context) => Profile(),
+          'login':(context) => Authenticate(),
+          'register' : (context) => Register()
         },
       ),
     );

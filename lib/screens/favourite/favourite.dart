@@ -8,17 +8,22 @@ class Favourite extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: secondayBackgroundColor,
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        child: Column(
-          children: const [
-            FavouriteHeader(),
-            Flexible(child: FavouriteItems())
-            ,
-          ],
-        )
+    return Container(
+      color: primaryBackgroundColor,
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: secondayBackgroundColor,
+          body: Container(
+            height: MediaQuery.of(context).size.height,
+            child: Column(
+              children: const [
+                FavouriteHeader(),
+                Flexible(child: FavouriteItems())
+                ,
+              ],
+            )
+          ),
+        ),
       ),
     );
   }

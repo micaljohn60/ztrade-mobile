@@ -52,8 +52,21 @@ class HorizontalSliderProducts extends StatelessWidget {
                             alignment: Alignment.centerRight,
                             child: Heart()),
                         ProductImage(isFav: false,),
-                        Text("Product title",style: GoogleFonts.poppins(fontSize:16.0,)),
-                        PriceTag()
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+
+                            Padding(
+                              padding: const EdgeInsets.only(left : 8.0),
+                              child: Text("Product title",style: GoogleFonts.poppins(fontSize:16.0,)),
+                            ),
+                          ],
+                        ),
+                        
+                        Padding(
+                          padding: const EdgeInsets.only(left:8.0,top: 5.0),
+                          child: PriceTag(),
+                        )
                       ],
                     ),
                   ),

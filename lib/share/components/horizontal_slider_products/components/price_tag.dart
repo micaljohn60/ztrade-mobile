@@ -11,7 +11,7 @@ class PriceTag extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(UniconsLine.pricetag_alt,color: primaryBackgroundColor,),
+        Icon(UniconsLine.pricetag_alt,color: primaryBackgroundColor,size: 15.0,),
         Text("100,000 - 150,000 Ks",style: GoogleFonts.poppins(fontSize: 13.0),)
       ],
     );

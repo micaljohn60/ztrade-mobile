@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:omni_mobile_app/constants/color.dart';
+import 'package:omni_mobile_app/screens/favourite/favourite.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class Input{
   Icon icon;
@@ -17,7 +20,8 @@ class Profile extends StatelessWidget {
     List<Input> widgetList = [
       Input(icon : const Icon(Icons.email,color: primaryBackgroundColor,),type: "email", text: "yorktownclass123@gmail.com"),
       Input(icon : const Icon(Icons.account_circle,color: primaryBackgroundColor),type: "text", text: "USS Enterprise"),
-      Input(icon : const Icon(Icons.factory_rounded,color: primaryBackgroundColor),type: "text", text: "US Navy"),
+      Input(icon : const Icon(Icons.factory_rounded,color: primaryBackgroundColor),type: "text", text: "Factory Name"),
+      Input(icon : const Icon(Icons.factory_rounded,color: primaryBackgroundColor),type: "number", text: "Phone Number"),
 
     ];
     return Scaffold(
@@ -47,14 +51,83 @@ class Profile extends StatelessWidget {
                           border: Border.all(
                               color: secondayBackgroundColor, width: 3.0))),
                 ),
+                
               ],
             ),
+            TextButton(onPressed: (){}, child: Text("Change Profile Picture")),
             Form(
               child: Column(
                 children: 
                   widgetList                    
                       .map((data) => inputLists(icon:data.icon, hint : data.text))
                       .toList()              
+              ),
+            ),
+
+            InkWell(
+              onTap: (){
+                pushNewScreen(
+                context,
+                screen: Favourite(),
+                
+            );
+              },
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 50.0,
+                decoration: const BoxDecoration(                
+                  border: Border(
+                    top: BorderSide(
+                      color: primaryBackgroundColor,
+                      width: 2.0
+                    ),
+                    bottom: BorderSide(
+                      color: primaryBackgroundColor,
+                      width: 2.0
+                    ),
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Row(
+                    children: [
+                     Icon(Icons.favorite,color: primaryBackgroundColor,),
+                     Padding(
+                       padding: EdgeInsets.only(left : 8.0),
+                       child: Text("Favourites Items",style: GoogleFonts.poppins(fontSize: 18.0)),
+                     )
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 50.0,
+              decoration: const BoxDecoration(                
+                border: Border(
+                  top: BorderSide(
+                    color: primaryBackgroundColor,
+                    width: 2.0
+                  ),
+                  bottom: BorderSide(
+                    color: primaryBackgroundColor,
+                    width: 2.0
+                  ),
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children:  [
+                   const Icon(Icons.document_scanner,color: primaryBackgroundColor,),
+                   Padding(
+                     padding: const EdgeInsets.only(left : 8.0),
+                     child: Text("Privacy Policy",style: GoogleFonts.poppins(fontSize: 18.0),),
+                   )
+                  ],
+                ),
               ),
             )
           ],
