@@ -1,3 +1,5 @@
+import 'package:omni_mobile_app/api/api_error.dart';
+
 class ApiResponse{
 
   Object _data;
@@ -8,6 +10,6 @@ class ApiResponse{
   set data(Object data)=> _data = data;
 
   Object get apiError => _apiError;
-  set apiError(Object apiError) => _apiError = apiError;
+  set ApiError(Map<dynamic,dynamic> apiError) => _apiError = apiError;
 
 }

@@ -5,7 +5,12 @@ import 'package:omni_mobile_app/screens/auth/register.dart';
 import 'package:omni_mobile_app/screens/index.dart';
 import 'package:omni_mobile_app/screens/product_detail/product_detail.dart';
 import 'package:omni_mobile_app/screens/profile/profile.dart';
+import 'package:omni_mobile_app/services/brand/brand.dart';
+import 'package:omni_mobile_app/services/brand/store_with_products.dart';
 import 'package:omni_mobile_app/services/category/category.dart';
+import 'package:omni_mobile_app/services/category/category_with_product.dart';
+import 'package:omni_mobile_app/services/product/product.dart';
+import 'package:omni_mobile_app/services/slider/carousel_slider_service.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -62,14 +67,19 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => Category())
+        ChangeNotifierProvider(create: (context) => CategoryService()),
+        ChangeNotifierProvider(create: (context) => CarouselSliderService()),
+        ChangeNotifierProvider(create: (context)=> ProductService()),
+        ChangeNotifierProvider(create: (context)=> BrandService()),
+        ChangeNotifierProvider(create: (context)=> StoreWithProduct()),
+        ChangeNotifierProvider(create: (context)=> CategoryWithProduct())
       ],
       child: MaterialApp(
         navigatorKey: myNavigatorKey,
         initialRoute: '/',
         routes: {
           '/': (context) => Index(),
-          'productdetail' : (context) => ProductDetail(),
+          
           'profile':(context) => Profile(),
           'login':(context) => Authenticate(),
           'register' : (context) => Register()

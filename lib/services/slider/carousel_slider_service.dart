@@ -5,20 +5,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 import 'package:omni_mobile_app/static/ztradeAPI.dart';
 
-class CategoryService with ChangeNotifier {
-  CategoryService();
+class CarouselSliderService with ChangeNotifier {
+  CarouselSliderService();
 
   List<dynamic> _map = [];
   List<dynamic> _reverseMap = [];
   bool _error = false;
-  bool _isEmpty = false;
+  bool _isEmptyData = false;
   String _errorMessage = '';
   String key;
   bool _isSocket = false;
   List<dynamic> get map => _map;
   List<dynamic> get reverseMap => _reverseMap;
   bool get error => _error;
-  bool get empty => _isEmpty;
+  bool get empty =>_isEmptyData;
   bool get socket => _isSocket;
   String get errorMessage => _errorMessage;
 
@@ -29,7 +29,7 @@ class CategoryService with ChangeNotifier {
       ZtradeAPI.environment == "dev" 
       ?
       response = await get(
-        Uri.http(ZtradeAPI.localEnvUrl, "api/category/list"),
+        Uri.http(ZtradeAPI.localEnvUrl, "api/slider/list"),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
@@ -45,9 +45,9 @@ class CategoryService with ChangeNotifier {
       if (response.statusCode == 200) {
         try {
           _map = jsonDecode(response.body);
-          _isEmpty =  _map.isEmpty ? true : false;
           _reverseMap = _map.reversed.toList();
           _error = false;
+          _isEmptyData = _map.isEmpty ? true : false;
           _isSocket = false;
         } catch (e) {
           _error = true;
@@ -60,7 +60,7 @@ class CategoryService with ChangeNotifier {
       } else if (response.statusCode == 404) {
         _error = true;
         _isSocket = false;
-        _errorMessage = 'No Jobs Found! ';
+        _errorMessage = 'No Active Sliders Found! ';
         _map = [];
         notifyListeners();
       } else {

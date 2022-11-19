@@ -4,7 +4,8 @@ import 'package:omni_mobile_app/constants/color.dart';
 import 'package:unicons/unicons.dart';
 
 class ProductPriceTag extends StatelessWidget {
-  const ProductPriceTag({ Key key }) : super(key: key);
+  String price;
+  ProductPriceTag({ Key key,this.price }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class ProductPriceTag extends StatelessWidget {
             Icon(UniconsLine.pricetag_alt,color: secondayBackgroundColor,size: 18.0,),
             Padding(
               padding: const EdgeInsets.only(left: 8.0),
-              child: Text("100,000 - 150,000 Ks",style: GoogleFonts.poppins(fontSize: 16.0,color: secondayTextColor),),
+              child: Text(price + " MMK",style: GoogleFonts.poppins(fontSize: 16.0,color: secondayTextColor),),
             )
           ],
       ),

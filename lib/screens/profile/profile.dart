@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:omni_mobile_app/constants/color.dart';
+import 'package:omni_mobile_app/screens/auth/authenticate.dart';
 import 'package:omni_mobile_app/screens/favourite/favourite.dart';
+import 'package:omni_mobile_app/screens/index.dart';
+import 'package:omni_mobile_app/share/components/no_auth/no_auth.dart';
+import 'package:omni_mobile_app/services/secure_storage/custom_secure_storage.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class Input{
@@ -12,11 +16,40 @@ class Input{
   Input({this.icon, this.type, this.text});
 }
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
   const Profile({Key key}) : super(key: key);
 
   @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+
+  String newValue = "n";
+  CustomSecureStorage css = CustomSecureStorage();
+  @override
+  void initState() {
+    
+    // TODO: implement initState
+    
+    readToken();
+    super.initState();
+    
+    
+  }
+ 
+  Future<void> readToken() async{
+    final String value = await css.readValue();
+    setState(() {
+      newValue = value;
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    
+    
+
     List<Input> widgetList = [
       Input(icon : const Icon(Icons.email,color: primaryBackgroundColor,),type: "email", text: "yorktownclass123@gmail.com"),
       Input(icon : const Icon(Icons.account_circle,color: primaryBackgroundColor),type: "text", text: "USS Enterprise"),
@@ -24,7 +57,13 @@ class Profile extends StatelessWidget {
       Input(icon : const Icon(Icons.factory_rounded,color: primaryBackgroundColor),type: "number", text: "Phone Number"),
 
     ];
-    return Scaffold(
+    return 
+    
+    newValue == null ?
+
+    NoAuth()
+    :    
+    Scaffold(
         body: Container(
       height: MediaQuery.of(context).size.height,
       child: SingleChildScrollView(
@@ -64,6 +103,19 @@ class Profile extends StatelessWidget {
               ),
             ),
 
+            ElevatedButton(
+              
+              onPressed: (){
+                css.deleteData("token");
+                pushNewScreen(
+                context,
+                screen: Index(),
+                withNavBar: true
+                
+            );
+              }, 
+              child: Text("Log Out")),
+
             InkWell(
               onTap: (){
                 pushNewScreen(
@@ -87,6 +139,7 @@ class Profile extends StatelessWidget {
                     ),
                   ),
                 ),
+                
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Row(

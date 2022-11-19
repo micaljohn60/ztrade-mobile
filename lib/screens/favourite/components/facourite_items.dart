@@ -42,9 +42,9 @@ class FavouriteItems extends StatelessWidget {
                             padding: const EdgeInsets.all(3.0),
                             child: ProductTitle(text: "Product Title"),
                           ),
-                          const Padding(
+                          Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: PriceTag(),
+                            child: PriceTag(price: "1"),
                           ),
                           const Padding(
                             padding: const EdgeInsets.all(8.0),

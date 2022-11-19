@@ -3,22 +3,21 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
-import 'package:omni_mobile_app/static/ztradeAPI.dart';
 
-class CategoryService with ChangeNotifier {
-  CategoryService();
+import '../../static/ztradeAPI.dart';
+
+class BrandService with ChangeNotifier{
+  BrandService();
 
   List<dynamic> _map = [];
   List<dynamic> _reverseMap = [];
   bool _error = false;
-  bool _isEmpty = false;
   String _errorMessage = '';
   String key;
   bool _isSocket = false;
   List<dynamic> get map => _map;
   List<dynamic> get reverseMap => _reverseMap;
   bool get error => _error;
-  bool get empty => _isEmpty;
   bool get socket => _isSocket;
   String get errorMessage => _errorMessage;
 
@@ -29,14 +28,14 @@ class CategoryService with ChangeNotifier {
       ZtradeAPI.environment == "dev" 
       ?
       response = await get(
-        Uri.http(ZtradeAPI.localEnvUrl, "api/category/list"),
+        Uri.http(ZtradeAPI.localEnvUrl, "api/store/list"),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
       )
       : 
       response = await get(
-        Uri.parse(ZtradeAPI.baseUrl + 'api/category/list'),
+        Uri.parse(ZtradeAPI.baseUrl + 'api/store/list'),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
@@ -45,7 +44,6 @@ class CategoryService with ChangeNotifier {
       if (response.statusCode == 200) {
         try {
           _map = jsonDecode(response.body);
-          _isEmpty =  _map.isEmpty ? true : false;
           _reverseMap = _map.reversed.toList();
           _error = false;
           _isSocket = false;

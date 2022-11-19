@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:omni_mobile_app/screens/product_detail/components/product_text.dart';
 
 class ProductDescription extends StatelessWidget {
-  const ProductDescription({ Key key }) : super(key: key);
+  
+  ProductDescription({ Key key,text }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
