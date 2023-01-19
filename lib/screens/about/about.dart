@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:omni_mobile_app/screens/about/components/about_header.dart';
+import 'package:omni_mobile_app/screens/category/components/loading/loading.dart';
+import 'package:omni_mobile_app/services/aboutus/aboutus_service.dart';
+import 'package:provider/provider.dart';
 
 class About extends StatefulWidget {
   About({Key key}) : super(key: key);
@@ -17,7 +20,20 @@ class _AboutState extends State<About> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    context.read<AboutUsService>().fetchAboutUs;
+    return Consumer<AboutUsService>(
+      builder: (context, value, child) {
+        return value.map.length ==0 && !value.error 
+        ?
+        Center(
+          child: Loading(height: 160,),
+        )
+        :
+        value.error?
+        Center(
+          child: Text(value.errorMessage),
+        ):
+        Container(
       height: MediaQuery.of(context).size.height,
       child: Column(children: [
         AboutUsHeader(),
@@ -25,11 +41,13 @@ class _AboutState extends State<About> {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
-              child: HtmlWidget(data),
+              child: HtmlWidget(value.map["data"]["description"]),
             ),
           ),
         )
       ]),
+    );
+      },
     );
   }
 }

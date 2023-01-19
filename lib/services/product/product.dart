@@ -28,14 +28,14 @@ class ProductService with ChangeNotifier{
       ZtradeAPI.environment == "dev" 
       ?
       response = await get(
-        Uri.http(ZtradeAPI.localEnvUrl, "api/product/list"),
+        Uri.http(ZtradeAPI.localEnvUrl, "nonrole/product/list"),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
       )
       : 
       response = await get(
-        Uri.parse(ZtradeAPI.baseUrl + 'api/product/list'),
+        Uri.parse(ZtradeAPI.baseUrl + 'nonrole/product/list'),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
@@ -58,10 +58,18 @@ class ProductService with ChangeNotifier{
       } else if (response.statusCode == 404) {
         _error = true;
         _isSocket = false;
-        _errorMessage = 'No Jobs Found! ';
+        _errorMessage = 'No Product Found! ';
         _map = [];
         notifyListeners();
-      } else {
+      } 
+      else if(response.statusCode == 403){
+        notifyListeners();
+        _error = true;
+        _isSocket = false;
+        _errorMessage = 'Permission Denied';
+        _map = [];
+      }
+      else {
         notifyListeners();
         _error = true;
         _isSocket = false;

@@ -29,14 +29,14 @@ class CarouselSliderService with ChangeNotifier {
       ZtradeAPI.environment == "dev" 
       ?
       response = await get(
-        Uri.http(ZtradeAPI.localEnvUrl, "api/slider/list"),
+        Uri.http(ZtradeAPI.localEnvUrl, "nonrole/slider/list"),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
       )
       : 
       response = await get(
-        Uri.parse(ZtradeAPI.baseUrl + 'api/category/list'),
+        Uri.parse(ZtradeAPI.baseUrl + 'nonrole/category/list'),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }

@@ -13,7 +13,9 @@ class Chat extends StatefulWidget {
 
 class _ChatState extends State<Chat> {
 
-  String newValue = "";
+  String email = "";
+  String userName = "";
+  String token = "";
   CustomSecureStorage css = CustomSecureStorage();
 
   @override
@@ -24,9 +26,13 @@ class _ChatState extends State<Chat> {
   }
 
   Future<void> readToken() async{
-    final String value = await css.readValue();
+    final String newToken = await css.readValue();
+    final String newuserName = await css.readValueName("username");
+    final String newemail = await css.readValueName("email");
     setState(() {
-      newValue = value;
+      email = newemail;
+      userName = newuserName;
+      token = newToken;
     });
   }
 
@@ -34,14 +40,14 @@ class _ChatState extends State<Chat> {
   @override
   Widget build(BuildContext context) {
     return 
-    newValue == null ?
+    token == null ?
     NoAuth()
     :
     Tawk(
-      directChatLink: 'https://tawk.to/chat/62ffcdf537898912e964075f/1garjp2rn',
+      directChatLink: 'https://tawk.to/chat/6396028bb0d6371309d3dde4/1gk0vjt5a',
       visitor: TawkVisitor(
-        name: 'Mr H',
-        email: 'randomlyh2020.mm@gmail.com',
+        name: userName,
+        email: email,
       ),
     );
   }

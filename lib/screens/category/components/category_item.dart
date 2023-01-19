@@ -5,54 +5,47 @@ import 'package:omni_mobile_app/screens/category/category_detail.dart';
 import 'package:omni_mobile_app/screens/category/components/loading/loading.dart';
 import 'package:omni_mobile_app/screens/product_detail/product_detail.dart';
 import 'package:omni_mobile_app/services/category/category.dart';
+import 'package:omni_mobile_app/services/secure_storage/custom_secure_storage.dart';
 import 'package:omni_mobile_app/static/ztradeAPI.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
-class CategoryItems extends StatelessWidget {
+import '../../../providers/app_providers.dart';
+
+class CategoryItems extends StatefulWidget {
   bool isHomePage;
-  CategoryItems({Key key, this.isHomePage}) : super(key: key);
+  List<dynamic> wishLists;
+  CategoryItems({Key key, this.isHomePage,this.wishLists}) : super(key: key);
 
-  String link =
-      "https://cmhlprodblobstorage1.blob.core.windows.net/sys-master-cmhlprodblobstorage1/h71/h5d/9017844662302/1-Grocery.jpg";
+  @override
+  State<CategoryItems> createState() => _CategoryItemsState();
+  
+}
 
-  var links = [
-    {
-      'image' : "https://cmhlprodblobstorage1.blob.core.windows.net/sys-master-cmhlprodblobstorage1/h71/h5d/9017844662302/1-Grocery.jpg",
-      'name' : "Groceries"
-    },
-     {
-      'image' : "https://cmhlprodblobstorage1.blob.core.windows.net/sys-master-cmhlprodblobstorage1/h1d/h79/9008829464606/Beverages.jpg",
-      'name' : "Drinks"
-    },
-     {
-      'image' :     "https://cmhlprodblobstorage1.blob.core.windows.net/sys-master-cmhlprodblobstorage1/ha2/h58/9073492918302/EN_Homepage_Desktop.jpg",
-      'name' : "Drinks"
-    },
-     {
-      'image' :     "https://cmhlprodblobstorage1.blob.core.windows.net/sys-master-cmhlprodblobstorage1/hc8/h3f/9017369559070/Beauty & Personal Care.jpg",
-
-      'name' : "Personal Care"
-    },
-     {
-      'image' : "https://cmhlprodblobstorage1.blob.core.windows.net/sys-master-cmhlprodblobstorage1/hc8/h3f/9017369559070/Beauty & Personal Care.jpg",
-      'name' : "Skin Care"
-    },
-     {
-      'image' :     "https://cmhlprodblobstorage1.blob.core.windows.net/sys-master-cmhlprodblobstorage1/h71/h5d/9017844662302/1-Grocery.jpg",
-
-      'name' : "Body Care"
-    },
-     {
-      'image' : "https://cmhlprodblobstorage1.blob.core.windows.net/sys-master-cmhlprodblobstorage1/h09/h91/9008830087198/CBC.jpg",
-      'name' : "Fresh"
-    },
+class _CategoryItemsState extends State<CategoryItems> {
+  CustomSecureStorage css = CustomSecureStorage();
+  String newValue = "n";
+  
+  @override
+  void initState() {
+    // TODO: implement initState
+    readToken();
+    super.initState();
     
-  ];
+    
+  }
+  Future<void> readToken() async {
+    final String value = await css.readValueName("session_id");
+    setState(() {
+      newValue = value;
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    context.read<CategoryService>().fetchData;
+    
+    context.read<CategoryService>().fetchData(newValue);
     List<String> widgetList = [
       'A',
       'B',
@@ -68,10 +61,9 @@ class CategoryItems extends StatelessWidget {
     var size = MediaQuery.of(context).size;
    
     return RefreshIndicator(onRefresh: () async {
-      await context.read<CategoryService>().fetchData;
+      await context.read<CategoryService>().fetchData(newValue);
     }, child: Consumer<CategoryService>(
       builder: ((context, value, child) {
-         
         return value.map.length == 0 && !value.error
             ? Center(
                 child: Loading(height: 160,)
@@ -91,35 +83,52 @@ class CategoryItems extends StatelessWidget {
                               fontSize: 20.0, fontWeight: FontWeight.w600),
                         ),
                       ),
+                      
                       GridView.count(
                           physics: NeverScrollableScrollPhysics(),
                           crossAxisCount: size.width > 600 ? 4 : 3,
                           childAspectRatio: size.width > 600 ? 1 : 0.7,
                           shrinkWrap: true,
-                          children: !isHomePage
-                              ? value.map
+                          children: !widget.isHomePage
+                              ? 
+                              value.map["category"].length >=6 ?
+                              value.map["category"]
                                   .sublist(0, 6)
-                                  .map((e) => listItem(Colors.white, "Fresh",value.map, context,e))
+                                  .map<Widget>((e) => listItem(Colors.white, "Fresh",value.map["category"], context,e,value.map["wishlist"]))
                                   .toList()
-                              : value.map
-                                  .map((e) => listItem(Colors.white, "Fresh",value.map, context,e))
+                                :
+                                value.map["category"]
+                                  .map<Widget>((e) => listItem(Colors.white, "Fresh",value.map["category"], context,e,value.map["wishlist"]))
+                                  .toList()
+                              : value.map["category"]
+                                  .map<Widget>((e) => listItem(Colors.white, "Fresh",value.map["category"], context,e,value.map["wishlist"]))
                                   .toList())
                     ],
                   );
-  })
+    })
     )
     );
       
    }
+  // Widget listItem1(Color color, String title,List data,BuildContext context,dynamic e){
+  //   print("E is here");
+  //   print(e);
+  // }
 
-  Widget listItem(Color color, String title,List data,BuildContext context,dynamic e)=> 
+  Widget listItem(Color color, String title,List data,BuildContext context,dynamic e,List wishList)=> 
+  
      Padding(
         padding: const EdgeInsets.all(5.0),
         child: InkWell(
           onTap: (){
+            AppProviders.disposeCategoryWithProductProvider(context);
             pushNewScreen(
                 context,
-                screen: CategoryDetail(title: e["name"],categoryId: e["id"].toString(),),
+                screen: CategoryDetail(
+                  title: e["name"],
+                  categoryId: e["id"].toString(),
+                  wishLists: wishList,
+                  ),
                 
             );
           },
@@ -145,11 +154,10 @@ class CategoryItems extends StatelessWidget {
                     width: 100,
                   ),
                 ),
-                Text(e["name"])
+                Text(e["name"] + e["id"].toString(),textAlign: TextAlign.center,)
               ],
             ),
           ),
         ),
       );
-  
 }

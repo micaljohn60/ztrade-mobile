@@ -3,40 +3,45 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
+import 'package:omni_mobile_app/abstract/disposable_provider.dart';
+import 'package:omni_mobile_app/api/api_response.dart';
 
 import '../../static/ztradeAPI.dart';
 
-class StoreWithProduct with ChangeNotifier{
-  
-  StoreWithProduct();
+class AboutUsService extends DisposableProvider{
+  AboutUsService();
 
-  Map<dynamic,dynamic> _map = {};
+  Map<String,dynamic> _map = {};
   List<dynamic> _reverseMap = [];
   bool _error = false;
+  bool _isEmpty = false;
   String _errorMessage = '';
   String key;
   bool _isSocket = false;
-  Map<dynamic,dynamic> get map => _map;
+  Map<String,dynamic> get map => _map;
   List<dynamic> get reverseMap => _reverseMap;
+  bool get isEmpty => _isEmpty;
   bool get error => _error;
   bool get socket => _isSocket;
   String get errorMessage => _errorMessage;
 
-  Future<void> fetchData(String id) async {
+  
+
+  Future<void> get fetchAboutUs async {
     Response response;
     try {
       
       ZtradeAPI.environment == "dev" 
       ?
       response = await get(
-        Uri.http(ZtradeAPI.localEnvUrl, "nonrole/store/showwithproduct/"+id),
+        Uri.http(ZtradeAPI.localEnvUrl, "api/aboutus/show/1"),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
       )
       : 
       response = await get(
-        Uri.parse(ZtradeAPI.baseUrl + 'nonrole/store/showwithproduct/'+id),
+        Uri.parse(ZtradeAPI.baseUrl + "api/aboutus/show/1"),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
@@ -45,7 +50,7 @@ class StoreWithProduct with ChangeNotifier{
       if (response.statusCode == 201) {
         try {
           _map = jsonDecode(response.body);
-          // _reverseMap = _map.reversed.toList();
+          _isEmpty = _map.isEmpty ? true :false;
           _error = false;
           _isSocket = false;
         } catch (e) {
@@ -59,10 +64,19 @@ class StoreWithProduct with ChangeNotifier{
       } else if (response.statusCode == 404) {
         _error = true;
         _isSocket = false;
-        _errorMessage = 'No Jobs Found! ';
+        _errorMessage = 'Request Fail ';
         _map = {};
         notifyListeners();
-      } else {
+      } 
+      else if(response.statusCode == 403){
+        notifyListeners();
+        _error = true;
+        _isSocket = false;
+        _errorMessage = 'Permission Denied';
+        _map = {};
+      }
+      else {
+        print(response.statusCode);
         notifyListeners();
         _error = true;
         _isSocket = false;
@@ -76,5 +90,10 @@ class StoreWithProduct with ChangeNotifier{
       _map = {};
       notifyListeners();
     }
+  }
+
+  @override
+  void disposeValue() {
+    _map = {};
   }
 }

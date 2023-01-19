@@ -7,9 +7,8 @@ import 'package:provider/provider.dart';
 import '../../../static/ztradeAPI.dart';
 
 class ImageSlider extends StatelessWidget {
-  ImageSlider({ Key key }) : super(key: key);
-
-  
+  List<dynamic> images;
+  ImageSlider({ Key key, this.images }) : super(key: key);  
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +26,7 @@ class ImageSlider extends StatelessWidget {
           )
           :
           value.empty ?
-          Center(child: Text("No Data"),)
+          Center(child: Text(""),)
           :
           Container(
             child: CarouselSlider(
@@ -36,7 +35,7 @@ class ImageSlider extends StatelessWidget {
             aspectRatio: 3,
             enlargeCenterPage: true,
         ),
-        items: value.map.map((item) => Container(
+        items: images.map((item) => Container(
           child: Container(
            padding: EdgeInsets.only(top: 3.0),
             child: ClipRRect(

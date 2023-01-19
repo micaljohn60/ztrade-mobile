@@ -57,131 +57,134 @@ class _RegisterState extends State<Register> {
       color: primaryBackgroundColor,
       child: SafeArea(
           child: Scaffold(
-              body: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Create Account",
-                    style: GoogleFonts.poppins(
-                        fontSize: 28.0,
-                        fontWeight: FontWeight.w500,
-                        color: primaryTextColor),
+              body: SingleChildScrollView(
+                child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Create Account",
+                      style: GoogleFonts.poppins(
+                          fontSize: 28.0,
+                          fontWeight: FontWeight.w500,
+                          color: primaryTextColor),
+                    ),
+                  ),
+                ],
+                          ),
+                          Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  onSaved: (value) => name = value,
+                  decoration: InputDecoration(
+                    label: Text("Username"),
+                    hintText: 'Enter User Name',
+                  ),
+                  validator: (value) =>
+                      value.isEmpty ? 'Please fill this form' : null,
+                ),
+                          ),
+                          Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  onSaved: (value) => email = value,
+                  decoration: InputDecoration(
+                      label: Text("example123@gmail.com"),
+                      hintText: 'Enter Email'),
+                  validator: (value) =>
+                      value.isEmpty ? 'Please fill this form' : null,
+                ),
+                          ),
+                          Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  onSaved: (value) => factoryName = value,
+                  decoration: InputDecoration(
+                      label: Text("Factory Name"),
+                      hintText: 'Enter Factory Name'),
+                  validator: (value) =>
+                      value.isEmpty ? 'Please fill this form' : null,
+                ),
+                          ),
+                          Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  onSaved: (value) => password = value,
+                  decoration: InputDecoration(
+                      label: Text("Password"), hintText: 'Enter your password'),
+                  validator: (value) =>
+                      value.isEmpty ? 'Please fill this form' : null,
+                ),
+                          ),
+                          Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  onSaved: (value) => reTypePassword = value,
+                  decoration: InputDecoration(
+                      label: Text("Confirm Password"),
+                      hintText: 'Re-type to Confirm password'),
+                  validator: (value) =>
+                      value.isEmpty ? 'Please fill this form' : null,
+                ),
+                          ),
+                          Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    _handleSubmit();
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text(
+                        "Sign Up",
+                        style: GoogleFonts.poppins(fontSize: 25.0),
+                      ),
+                      isLoading ?
+                      const Icon(
+                        // <-- Icon
+                        Icons.circle,
+                        size: 24.0,
+                      ):
+                      const Icon(
+                        // <-- Icon
+                        Icons.navigate_next_rounded,
+                        size: 24.0,
+                      ),
+                    ],
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    elevation: 0,
+                    primary: primaryBackgroundColor,
+                    padding: EdgeInsets.symmetric(horizontal: 90, vertical: 5),
                   ),
                 ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                onSaved: (value) => name = value,
-                decoration: InputDecoration(
-                  label: Text("Username"),
-                  hintText: 'Enter User Name',
-                ),
-                validator: (value) =>
-                    value.isEmpty ? 'Please fill this form' : null,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                onSaved: (value) => email = value,
-                decoration: InputDecoration(
-                    label: Text("example123@gmail.com"),
-                    hintText: 'Enter Email'),
-                validator: (value) =>
-                    value.isEmpty ? 'Please fill this form' : null,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                onSaved: (value) => factoryName = value,
-                decoration: InputDecoration(
-                    label: Text("Factory Name"),
-                    hintText: 'Enter Factory Name'),
-                validator: (value) =>
-                    value.isEmpty ? 'Please fill this form' : null,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                onSaved: (value) => password = value,
-                decoration: InputDecoration(
-                    label: Text("Password"), hintText: 'Enter your password'),
-                validator: (value) =>
-                    value.isEmpty ? 'Please fill this form' : null,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
-                onSaved: (value) => reTypePassword = value,
-                decoration: InputDecoration(
-                    label: Text("Confirm Password"),
-                    hintText: 'Re-type to Confirm password'),
-                validator: (value) =>
-                    value.isEmpty ? 'Please fill this form' : null,
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  _handleSubmit();
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Text(
-                      "Sign Up",
-                      style: GoogleFonts.poppins(fontSize: 25.0),
+                          ),
+                          Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text("Already have an account? "),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        widget.toggleView();
+                      },
+                      child: const Text("Login"))
+                ],
+                          ),
+                        ],
+                      ),
                     ),
-                    isLoading ?
-                    const Icon(
-                      // <-- Icon
-                      Icons.circle,
-                      size: 24.0,
-                    ):
-                    const Icon(
-                      // <-- Icon
-                      Icons.navigate_next_rounded,
-                      size: 24.0,
-                    ),
-                  ],
-                ),
-                style: ElevatedButton.styleFrom(
-                  elevation: 0,
-                  primary: primaryBackgroundColor,
-                  padding: EdgeInsets.symmetric(horizontal: 90, vertical: 5),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.all(8.0),
-                  child: Text("Already have an account? "),
-                ),
-                TextButton(
-                    onPressed: () {
-                      widget.toggleView();
-                    },
-                    child: const Text("Login"))
-              ],
-            ),
-          ],
-        ),
-      ))),
+              ))),
     );
   }
 }

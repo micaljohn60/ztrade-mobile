@@ -11,6 +11,11 @@ class CustomSecureStorage{
     return value;
   }
 
+   Future<String> readValueName(String name) async{
+    String value = await _storage.read(key: name);
+    return value;
+  }
+
   Future writeData(String key, String value)  async {
     var writeData = await _storage.write(key: key, value: value);
     return writeData;

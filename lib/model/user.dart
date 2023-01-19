@@ -39,7 +39,9 @@ class User with ChangeNotifier{
 
   User.fromJson(Map<String, dynamic> json) {
     _token = json['token'];
-
+    _userId = json["user"]["id"].toString();
+    _email = json["user"]["email"];
+    _userName = json["user"]["name"];
     
   }
 

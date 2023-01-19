@@ -1,60 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:omni_mobile_app/constants/color.dart';
-import 'package:omni_mobile_app/services/category/category_with_product.dart';
-import 'package:omni_mobile_app/share/components/no_items/no_item.dart';
-import 'package:omni_mobile_app/share/components/topbar.dart';
+import 'package:omni_mobile_app/services/search/search_service.dart';
+import 'package:omni_mobile_app/static/ztradeAPI.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 
-import '../../providers/app_providers.dart';
-import '../../static/ztradeAPI.dart';
 import '../product_detail/product_detail.dart';
 
-class CategoryDetail extends StatelessWidget {
-  String title;
-  String categoryId;
-  List<dynamic> wishLists;
-  CategoryDetail({Key key, this.title,this.categoryId,this.wishLists}) : super(key: key);
+class Search extends StatelessWidget {
+  String text;
+  Search({ Key key, this.text }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-   
     var size = MediaQuery.of(context).size;
-    context.read<CategoryWithProduct>().fetchData(categoryId);
-
-    return WillPopScope(
-      onWillPop: (){
-        
-        AppProviders.disposeCategoryWithProductProvider(context);
-      },
-      child: Scaffold(
-        backgroundColor: secondayBackgroundColor,
-        body: Consumer<CategoryWithProduct>(
-        builder: ((context, value, child) {
-          return value.map.length == 0 && !value.error
-              ? Center(
-                  child: Text("Loading"),
-                )
-              : value.error
-                  ? Center(
-                      child: Text(value.errorMessage),
-                    )
-                  : SingleChildScrollView(
+    context.read<SearchService>().fetchData(text);
+    return Scaffold(
+      body: SafeArea(
+        child: Consumer<SearchService>(
+          builder: ((context,value,child){
+            return value.map.length == 0 && !value.error ?
+            Center(
+              child: CircularProgressIndicator(color: primaryBackgroundColor),
+            )
+            :
+            value.error ?
+            Center(
+              child: Text(value.errorMessage),
+            )
+            :
+            SingleChildScrollView(
                       child: Container(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            TopBar(),
-                            value.map["product"].length == 0 ?
-                            NoItem(errorText : "No Item for This Category : " + title)
-                            :
+
                             Padding(
                               padding: const EdgeInsets.only(
                                   left: 8.0, right: 8.0, bottom: 8.0, top: 15.0),
                               child: Text(
-                                "Category : " + title,
+                                "Search Result : " + text,
                                 style: GoogleFonts.poppins(
                                     fontSize: 20.0, fontWeight: FontWeight.w600),
                               ),
@@ -66,7 +53,7 @@ class CategoryDetail extends StatelessWidget {
                                   crossAxisCount: size.width > 600 ? 4 : 3,
                                   childAspectRatio: size.width > 600 ? 1 : 0.7,
                                   shrinkWrap: true,
-                                  children: value.map["product"]
+                                  children: value.map
                                       .map<Widget>((e) => listItem(
                                           Colors.white, "title", context, e))
                                       .toList()),
@@ -75,11 +62,11 @@ class CategoryDetail extends StatelessWidget {
                         ),
                       ),
                     );
-        }),
-      )),
+          }),
+        ),
+      ),
     );
   }
-
   Widget listItem(Color color, String title, BuildContext context, dynamic e) =>
       Padding(
         padding: const EdgeInsets.all(5.0),
@@ -87,14 +74,7 @@ class CategoryDetail extends StatelessWidget {
           onTap: () {
             pushNewScreen(
                 context,
-                screen: ProductDetail(
-                  title: e["name"],
-                  itemDescription: e["item_description"],
-                  category: "No Data in API",
-                  images: e["product_image"],
-                  price: e["price"],
-                  favItems: wishLists ?? [],
-                  ),
+                screen: ProductDetail(title: e["name"],itemDescription: e["item_description"],category: "No Data in API",images: e["product_image"],price: e["price"],),
 
             );
           },
@@ -122,7 +102,7 @@ class CategoryDetail extends StatelessWidget {
                     width: 100,
                   ),
                 ),
-                Flexible(child: Text(e["name"],maxLines: 1,overflow: TextOverflow.ellipsis,))
+                Text(e["name"])
               ],
             ),
           ),

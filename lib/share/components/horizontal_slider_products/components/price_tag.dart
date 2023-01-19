@@ -12,7 +12,7 @@ class PriceTag extends StatelessWidget {
     return Row(
       children: [
         Icon(UniconsLine.pricetag_alt,color: primaryBackgroundColor,size: 15.0,),
-        Text(price + " MMK",style: GoogleFonts.poppins(fontSize: 13.0),)
+        Text(price .replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')+ " MMK",style: GoogleFonts.poppins(fontSize: 13.0),)
       ],
     );
   }

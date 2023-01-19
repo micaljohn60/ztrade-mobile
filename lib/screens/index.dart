@@ -7,6 +7,9 @@ import 'package:omni_mobile_app/screens/favourite/favourite.dart';
 import 'package:omni_mobile_app/screens/home/home.dart';
 import 'package:omni_mobile_app/screens/profile/profile.dart';
 import 'package:omni_mobile_app/services/category/category.dart';
+import 'package:omni_mobile_app/services/index/index_service.dart';
+import 'package:omni_mobile_app/services/index/index_service_auth.dart';
+import 'package:omni_mobile_app/services/secure_storage/custom_secure_storage.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:unicons/unicons.dart';
@@ -19,6 +22,17 @@ class Index extends StatefulWidget {
 }
 
 class _IndexState extends State<Index> {
+
+  CustomSecureStorage css = CustomSecureStorage();
+    String newValue = "n";
+    Future<void> readToken() async {
+    final String value = await css.readValueName("session_id");
+    setState(() {
+      newValue = value;
+    });
+  }
+
+  
 
   List<Widget> _buildScreens(){
     return(
@@ -67,6 +81,14 @@ class _IndexState extends State<Index> {
       ]
     );
   }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+
+     readToken();
+    super.initState();
+  }
   
 
   @override
@@ -77,7 +99,8 @@ class _IndexState extends State<Index> {
 
     return  RefreshIndicator(
       onRefresh: () async {
-        await context.read<CategoryService>().fetchData;
+        await context.read<IndexService>().fetchData;
+        await context.read<IndexServiceAuth>().fetchData(newValue);
       },
       child: Container(
           decoration: BoxDecoration(

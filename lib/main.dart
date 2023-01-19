@@ -5,12 +5,18 @@ import 'package:omni_mobile_app/screens/auth/register.dart';
 import 'package:omni_mobile_app/screens/index.dart';
 import 'package:omni_mobile_app/screens/product_detail/product_detail.dart';
 import 'package:omni_mobile_app/screens/profile/profile.dart';
+import 'package:omni_mobile_app/services/aboutus/aboutus_service.dart';
+import 'package:omni_mobile_app/services/authentication/user_service.dart';
 import 'package:omni_mobile_app/services/brand/brand.dart';
 import 'package:omni_mobile_app/services/brand/store_with_products.dart';
 import 'package:omni_mobile_app/services/category/category.dart';
 import 'package:omni_mobile_app/services/category/category_with_product.dart';
+import 'package:omni_mobile_app/services/index/index_service.dart';
+import 'package:omni_mobile_app/services/index/index_service_auth.dart';
 import 'package:omni_mobile_app/services/product/product.dart';
+import 'package:omni_mobile_app/services/search/search_service.dart';
 import 'package:omni_mobile_app/services/slider/carousel_slider_service.dart';
+import 'package:omni_mobile_app/services/wishlist_service/user_wishlist_service.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -67,12 +73,18 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (context) => IndexService()),
+        ChangeNotifierProvider(create: (context) => IndexServiceAuth()),
         ChangeNotifierProvider(create: (context) => CategoryService()),
         ChangeNotifierProvider(create: (context) => CarouselSliderService()),
         ChangeNotifierProvider(create: (context)=> ProductService()),
         ChangeNotifierProvider(create: (context)=> BrandService()),
         ChangeNotifierProvider(create: (context)=> StoreWithProduct()),
-        ChangeNotifierProvider(create: (context)=> CategoryWithProduct())
+        ChangeNotifierProvider(create: (context)=> CategoryWithProduct()),
+        ChangeNotifierProvider(create: (context)=> SearchService()),
+        ChangeNotifierProvider(create: (context)=> UserService()),
+        ChangeNotifierProvider(create: (context)=> UserWishListService()),
+        ChangeNotifierProvider(create: (context)=> AboutUsService())
       ],
       child: MaterialApp(
         navigatorKey: myNavigatorKey,

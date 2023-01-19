@@ -3,10 +3,11 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
+import 'package:omni_mobile_app/abstract/disposable_provider.dart';
 
 import '../../static/ztradeAPI.dart';
 
-class CategoryWithProduct with ChangeNotifier{
+class CategoryWithProduct extends DisposableProvider{
   
   CategoryWithProduct();
 
@@ -29,14 +30,14 @@ class CategoryWithProduct with ChangeNotifier{
       ZtradeAPI.environment == "dev" 
       ?
       response = await get(
-        Uri.http(ZtradeAPI.localEnvUrl, "api/category/show/"+id),
+        Uri.http(ZtradeAPI.localEnvUrl, "nonrole/category/show/"+id),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
       )
       : 
       response = await get(
-        Uri.parse(ZtradeAPI.baseUrl + 'api/category/show/'+id),
+        Uri.parse(ZtradeAPI.baseUrl + 'nonrole/category/show/'+id),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
@@ -77,5 +78,11 @@ class CategoryWithProduct with ChangeNotifier{
       _map = {};
       notifyListeners();
     }
+  }
+
+   @override
+  void disposeValue() {
+    _map = {};
+    // TODO: implement disposeValue
   }
 }

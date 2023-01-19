@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omni_mobile_app/constants/color.dart';
 import 'package:omni_mobile_app/screens/profile/profile.dart';
+import 'package:omni_mobile_app/screens/search/search.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:unicons/unicons.dart';
 
@@ -12,6 +13,8 @@ class TopBar extends StatefulWidget {
 }
 
 class _TopBarState extends State<TopBar> {
+
+ 
   
   @override
   Widget build(BuildContext context) {
@@ -31,6 +34,13 @@ class _TopBarState extends State<TopBar> {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
+                onSubmitted: (value) {
+                  pushNewScreen(
+                    context,
+                    screen: Search(text: value,),
+                    withNavBar: true,
+    );
+                },
                 decoration: InputDecoration(
                   prefixIcon: Icon(UniconsLine.search,color: secondayBackgroundColor),
                   labelText: "Search",

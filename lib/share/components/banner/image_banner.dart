@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:omni_mobile_app/static/ztradeAPI.dart';
 
 class ImageBanner extends StatelessWidget {
-  ImageBanner({ Key key }) : super(key: key);
-  String link ="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg";
+  String image;
+  ImageBanner({ Key key , this.image}) : super(key: key);
+  // String link = ZtradeAPI.baseUrl + "storage/banner_image/"+image;
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -14,7 +16,7 @@ class ImageBanner extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
           image: DecorationImage(
-            image: NetworkImage(link),
+            image: NetworkImage(ZtradeAPI.baseUrl + "storage/banner_image/"+image),
             fit: BoxFit.cover,
             
           )

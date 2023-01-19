@@ -12,109 +12,134 @@ import 'package:provider/provider.dart';
 
 class HorizontalSliderProducts extends StatelessWidget {
   String title;
-  HorizontalSliderProducts({Key key, this.title}) : super(key: key);
+  String userId;
+  List<dynamic> products;
+  List<dynamic> wishLists;
+  HorizontalSliderProducts(
+      {Key key, this.title, this.products, this.userId, this.wishLists})
+      : super(key: key);
+
+
+   
 
   @override
   Widget build(BuildContext context) {
-    context.read<ProductService>().fetchData;
+   
+    bool checkInWishList(List<dynamic> list, String productId){
+      
+      for(int i=0; i< list.length ; i++) {
+        
+        if (list[i]["product_id"].toString() == productId) {
+          
+          return true;
+        } 
+      }
+      return false;      
+    }
+   
+
     var size = MediaQuery.of(context).size;
-    return Consumer<ProductService>(
-      builder: ((context, value, child) {
-        return value.map.length == 0 && !value.error
-            ? Center(
-                child: Loading(height: 330,)
-              )
-            : value.error
-                ? Center(
-                    child: Text(value.errorMessage),
-                  )
-                : SizedBox(
-                    height: 330,
-                    width: size.width,
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: ProductTitle(text: title),
+    return SizedBox(
+      height: 330,
+      width: size.width,
+      child: Column(
+        children: [
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ProductTitle(text: title),
+            ),
+          ),
+          SizedBox(
+            height: 280,
+            width: size.width,
+            child: ListView.builder(
+              itemCount: products.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (context, index) => Padding(
+                padding: const EdgeInsets.all(6.0),
+                child: InkWell(
+                  onTap: () {
+                    pushNewScreen(context,
+                        screen: ProductDetail(
+                          title: products[index]["name"],
+                          price: products[index]["price"],
+                          itemDescription: products[index]["item_description"],
+                          category: products[index]["category"]["name"],
+                          images: products[index]["product_image"],
+                          favItems: wishLists,
+                        ));
+                  },
+                  child: Container(
+                    width: 160,
+                    decoration: BoxDecoration(
+                        color: const Color.fromRGBO(255, 255, 255, 1),
+                        borderRadius: BorderRadius.circular(10.0),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 3.0,
+                              blurRadius: 5.0)
+                        ]),
+                    child: Padding(
+                      padding: const EdgeInsets.all(0.0),
+                      child: Column(
+                        children: [
+                          Container(
+                              width: size.width / 2.1,
+                              alignment: Alignment.centerRight,
+                              child: Heart(
+                                userId: userId,
+                                productId: products[index]["id"].toString(),
+                                wishLists: wishLists,
+                                isWishList: checkInWishList(wishLists, products[index]["id"].toString()),
+                              )),
+                          ProductImage(
+                            imgUrl: ZtradeAPI.productImageUrl +
+                                products[index]["product_image"][0]
+                                        ["thumbnails"]
+                                    .replaceAll('"', ''),
+                            isFav: false,
                           ),
-                        ),
-                        SizedBox(
-                          height: 280,
-                          width: size.width,
-                          child: ListView.builder(
-                            itemCount: 3,
-                            scrollDirection: Axis.horizontal,
-                            itemBuilder: (context, index) => Padding(
-                              padding: const EdgeInsets.all(6.0),
-                              child: InkWell(
-                                onTap: () {
-                                  pushNewScreen(context,
-                                   screen: ProductDetail(
-                                    title: value.map[index]["name"],
-                                    price: value.map[index]["price"] , 
-                                    itemDescription: value.map[index]["item_description"],
-                                    category: value.map[index]["category"]["name"],
-                                    images: value.map[index]["product_image"],
-                                    
-                                  ));
-                                },
-                                child: Container(
-                                  width: 160,
-                                  decoration: BoxDecoration(
-                                      color:
-                                          const Color.fromRGBO(255, 255, 255, 1),
-                                      borderRadius: BorderRadius.circular(10.0),
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Colors.grey.withOpacity(0.2),
-                                            spreadRadius: 3.0,
-                                            blurRadius: 5.0)
-                                      ]),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(0.0),
-                                    child: Column(
-                                      children: [
-                                        Container(
-                                            width: size.width / 2.1,
-                                            alignment: Alignment.centerRight,
-                                            child: Heart()),
-                                        ProductImage(
-                                          imgUrl : ZtradeAPI.productImageUrl + value.map[index]["product_image"][0]["thumbnails"].replaceAll('"', ''),
-                                          isFav: false,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8.0),
-                                              child: Text(value.map[index]["name"],
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: 16.0,
-                                                  )),
-                                            ),
-                                          ],
-                                        ),
-                                        Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 8.0, top: 5.0),
-                                          child: PriceTag(price: value.map[index]["price"]),
-                                        )
-                                      ],
-                                    ),
-                                  ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Flexible(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: checkInWishList(wishLists, products[index]["id"].toString()) ?
+
+                                  Text(products[index]["name"] + "- Y ",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 16.0,
+                                      )):
+                                  Text(products[index]["name"] + "- N ",
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 16.0,
+                                      )),
                                 ),
                               ),
-                            ),
+                            ],
                           ),
-                        ),
-                      ],
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0, top: 5.0),
+                            child: PriceTag(price: products[index]["price"]),
+                          )
+                        ],
+                      ),
                     ),
-                  );
-      }),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -133,9 +158,7 @@ class ProductImage extends StatelessWidget {
         height: isFav ? 120 : 150,
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage(
-                    imgUrl),
-                fit: BoxFit.cover)),
+                image: NetworkImage(imgUrl), fit: BoxFit.cover)),
       ),
     );
   }

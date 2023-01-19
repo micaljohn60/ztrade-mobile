@@ -28,14 +28,14 @@ class BrandService with ChangeNotifier{
       ZtradeAPI.environment == "dev" 
       ?
       response = await get(
-        Uri.http(ZtradeAPI.localEnvUrl, "api/store/list"),
+        Uri.http(ZtradeAPI.localEnvUrl, "nonrole/store/list"),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
       )
       : 
       response = await get(
-        Uri.parse(ZtradeAPI.baseUrl + 'api/store/list'),
+        Uri.parse(ZtradeAPI.baseUrl + 'nonrole/store/list'),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }

@@ -3,12 +3,13 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
+import 'package:omni_mobile_app/abstract/disposable_provider.dart';
+import 'package:omni_mobile_app/api/api_response.dart';
 
 import '../../static/ztradeAPI.dart';
 
-class StoreWithProduct with ChangeNotifier{
-  
-  StoreWithProduct();
+class IndexService extends DisposableProvider{
+  IndexService();
 
   Map<dynamic,dynamic> _map = {};
   List<dynamic> _reverseMap = [];
@@ -22,30 +23,32 @@ class StoreWithProduct with ChangeNotifier{
   bool get socket => _isSocket;
   String get errorMessage => _errorMessage;
 
-  Future<void> fetchData(String id) async {
+  
+
+  Future<void> get fetchData async {
     Response response;
     try {
       
       ZtradeAPI.environment == "dev" 
       ?
       response = await get(
-        Uri.http(ZtradeAPI.localEnvUrl, "nonrole/store/showwithproduct/"+id),
+        Uri.http(ZtradeAPI.localEnvUrl, "nonrole/ztrade/index"),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
       )
       : 
       response = await get(
-        Uri.parse(ZtradeAPI.baseUrl + 'nonrole/store/showwithproduct/'+id),
+        Uri.parse(ZtradeAPI.baseUrl + 'nonrole/ztrade/index'),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 200) {
         try {
           _map = jsonDecode(response.body);
-          // _reverseMap = _map.reversed.toList();
+          
           _error = false;
           _isSocket = false;
         } catch (e) {
@@ -59,10 +62,18 @@ class StoreWithProduct with ChangeNotifier{
       } else if (response.statusCode == 404) {
         _error = true;
         _isSocket = false;
-        _errorMessage = 'No Jobs Found! ';
+        _errorMessage = 'No Product Found! ';
         _map = {};
         notifyListeners();
-      } else {
+      } 
+      else if(response.statusCode == 403){
+        notifyListeners();
+        _error = true;
+        _isSocket = false;
+        _errorMessage = 'Permission Denied';
+        _map = {};
+      }
+      else {
         notifyListeners();
         _error = true;
         _isSocket = false;
@@ -76,5 +87,10 @@ class StoreWithProduct with ChangeNotifier{
       _map = {};
       notifyListeners();
     }
+  }
+
+  @override
+  void disposeValue() {
+    _map = {};
   }
 }

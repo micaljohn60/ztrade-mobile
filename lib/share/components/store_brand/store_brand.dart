@@ -28,7 +28,7 @@ class StoreBrand extends StatelessWidget {
       builder: (context, value, child) {
         return value.map.length == 0 && !value.error
             ? Center(
-                child: Text("Loading"),
+                
               )
             : value.error
                 ? Center(
