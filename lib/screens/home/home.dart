@@ -13,7 +13,8 @@ import 'package:omni_mobile_app/share/components/topbar.dart';
 import 'package:provider/provider.dart';
 
 class Home extends StatefulWidget {
-  const Home({Key key}) : super(key: key);
+  String token;
+  Home({Key key, this.token}) : super(key: key);
 
   @override
   State<Home> createState() => _HomeState();
@@ -43,9 +44,13 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {  
 
-
-    context.read<IndexService>().fetchData;
+    
+    
+    widget.token == null ?
+    context.read<IndexService>().fetchData
+    :
     context.read<IndexServiceAuth>().fetchData(newValue);
+
     return newValue == "n" ?
 
     Consumer<IndexService>(builder: ((context, value, child) {
@@ -57,9 +62,20 @@ class _HomeState extends State<Home> {
           )
         )
       : value.error
-          ? Center(
+          ? Column(
+            children: [
+              Center(
               child: Text(value.errorMessage),
-            )
+            ),
+            TextButton(onPressed: () {
+
+                    
+            context.read<IndexService>().fetchData;
+          
+
+            }, child: Text("Refresh"))
+            ],
+          )
           : Container(
               color: secondayBackgroundColor,
               child: SingleChildScrollView(
@@ -81,35 +97,35 @@ class _HomeState extends State<Home> {
                     ImageBanner(image: value.map["banners"][0]["image"],)
                     ,
 
-                    //  value.map["topselling"].length == 0 
-                    // ?
-                    // Container()
-                    // :
-                    // HorizontalSliderProducts(title: "Top Selling Products",products: value.map["topselling"],wishLists: value.map["wishlist"] ?? [],),
+                     value.map["topselling"].length == 0 
+                    ?
+                    Container()
+                    :
+                    HorizontalSliderProducts(title: "Top Selling Products",products: value.map["topselling"],wishLists: value.map["wishlist"] ?? [],),
                     
-                    // value.map["banners"].length == 2
-                    // ?
-                    // ImageBanner(image: value.map["banners"][1]["image"],)
-                    // :
-                    // Container()
-                    // ,
+                    value.map["banners"].length == 2
+                    ?
+                    ImageBanner(image: value.map["banners"][1]["image"],)
+                    :
+                    Container()
+                    ,
 
-                    // StoreBrand(title: "Brands"),
+                    StoreBrand(title: "Brands"),
 
-                    // value.map["newarrival"].length == 0 
-                    // ?
-                    // Container()
-                    // :
-                    // HorizontalSliderProducts(
-                    //     title: "New Arrival",products: value.map["newarrival"],wishLists: value.map["wishlist"] ?? []),
+                    value.map["newarrival"].length == 0 
+                    ?
+                    Container()
+                    :
+                    HorizontalSliderProducts(
+                        title: "New Arrival",products: value.map["newarrival"],wishLists: value.map["wishlist"] ?? []),
 
-                    // value.map["banners"].length == 3
-                    // ?
-                    // ImageBanner(image: value.map["banners"][2]["image"],)
-                    // :
-                    // Container()
-                    // ,
-                    // HorizontalSliderProducts(title: "Latest Upload",products: value.map["products"],wishLists: value.map["wishlist"] ?? []),
+                    value.map["banners"].length == 3
+                    ?
+                    ImageBanner(image: value.map["banners"][2]["image"],)
+                    :
+                    Container()
+                    ,
+                    HorizontalSliderProducts(title: "Latest Upload",products: value.map["products"],wishLists: value.map["wishlist"] ?? []),
 
                   ],
                 ),
@@ -125,9 +141,18 @@ class _HomeState extends State<Home> {
           )
         )
       : value.error
-          ? Center(
+          ? Column(
+            children: [
+              Center(
               child: Text(value.errorMessage),
-            )
+            ),
+            TextButton(onPressed: () {
+
+            context.read<IndexServiceAuth>().fetchData(newValue);
+
+            }, child: Text("Hahah"))
+            ],
+          )
           : Container(
               color: secondayBackgroundColor,
               child: SingleChildScrollView(
@@ -149,35 +174,35 @@ class _HomeState extends State<Home> {
                     ImageBanner(image: value.map["banners"][0]["image"],)
                     ,
 
-                    //  value.map["topselling"].length == 0 
-                    // ?
-                    // Container()
-                    // :
-                    // HorizontalSliderProducts(title: "Top Selling Products",products: value.map["topselling"],wishLists: value.map["wishlist"] ?? [],),
+                     value.map["topselling"].length == 0 
+                    ?
+                    Container()
+                    :
+                    HorizontalSliderProducts(title: "Top Selling Products",products: value.map["topselling"],userId: newValue,wishLists: value.map["wishlist"],),
                     
-                    // value.map["banners"].length == 2
-                    // ?
-                    // ImageBanner(image: value.map["banners"][1]["image"],)
-                    // :
-                    // Container()
-                    // ,
+                    value.map["banners"].length == 2
+                    ?
+                    ImageBanner(image: value.map["banners"][1]["image"],)
+                    :
+                    Container()
+                    ,
 
-                    // StoreBrand(title: "Brands"),
+                    StoreBrand(title: "Brands"),
 
-                    // value.map["newarrival"].length == 0 
-                    // ?
-                    // Container()
-                    // :
-                    // HorizontalSliderProducts(
-                    //     title: "New Arrival",products: value.map["newarrival"],wishLists: value.map["wishlist"] ?? []),
+                    value.map["newarrival"].length == 0 
+                    ?
+                    Container()
+                    :
+                    HorizontalSliderProducts(
+                        title: "New Arrival",products: value.map["newarrival"],userId: newValue,wishLists: value.map["wishlist"]),
 
-                    // value.map["banners"].length == 3
-                    // ?
-                    // ImageBanner(image: value.map["banners"][2]["image"],)
-                    // :
-                    // Container()
-                    // ,
-                    // HorizontalSliderProducts(title: "Latest Upload",products: value.map["products"],wishLists: value.map["wishlist"] ?? []),
+                    value.map["banners"].length == 3
+                    ?
+                    ImageBanner(image: value.map["banners"][2]["image"],)
+                    :
+                    Container()
+                    ,
+                    HorizontalSliderProducts(title: "Latest Upload",products: value.map["products"],userId: newValue,wishLists: value.map["wishlist"]),
 
                   ],
                 ),

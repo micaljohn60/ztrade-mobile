@@ -64,7 +64,7 @@ class UserService extends DisposableProvider{
       } else if (response.statusCode == 404) {
         _error = true;
         _isSocket = false;
-        _errorMessage = 'No Product Found! ';
+        _errorMessage = 'Error 404! ';
         _map = {};
         notifyListeners();
       } 
@@ -77,9 +77,11 @@ class UserService extends DisposableProvider{
       }
       else {
         notifyListeners();
+        print(response.statusCode);
         _error = true;
         _isSocket = false;
-        _errorMessage = 'Not Found! ';
+        print(id);
+        _errorMessage = 'Unstable Connection ';
         _map = {};
       }
     } on SocketException catch (e) {

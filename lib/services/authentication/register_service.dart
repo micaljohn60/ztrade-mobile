@@ -15,33 +15,34 @@ Future<ApiResponse> registerUser(String userName, String email, String factoryNa
     ZtradeAPI.environment == "dev" ?
 
     response = await post(
-        Uri.http(ZtradeAPI.localEnvUrl, "api/user/register"),
+        Uri.http(ZtradeAPI.localEnvUrl, "nonrole/user/register"),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
         body: {
           'name' : userName,
           'email' : email,
-          'factoryName' : factoryName,
+          'factory' : factoryName,
           'password' : password
         }
 
       )
       :
       response = await post(
-        Uri.parse(ZtradeAPI.baseUrl + 'api/user/register'),
-        // headers: {
-        //   'Authorization': 'Bearer $token',
-        // }
+        Uri.parse(ZtradeAPI.baseUrl + 'nonrole/user/register'),
+        headers: {
+          'accept' : 'application/json'
+        },
         body: {
           'name' : userName,
           'email' : email,
-          'factoryName' : factoryName,
+          'factory' : factoryName,
           'password' : password
         }
       );
-
+      
       switch(response.statusCode){
+        
         case 201:
        
         _apiResponse.data = User.fromJson(json.decode(response.body));
@@ -52,7 +53,8 @@ Future<ApiResponse> registerUser(String userName, String email, String factoryNa
         break;
         
         default:
-        
+        print(response.statusCode);
+        print(response.body);
         _apiResponse.ApiError = json.decode(response.body);
         break;
       }

@@ -23,21 +23,22 @@ class CategoryWithProduct extends DisposableProvider{
   bool get socket => _isSocket;
   String get errorMessage => _errorMessage;
 
-  Future<void> fetchData(String id) async {
+  Future<void> fetchData(String id,String pageNumber) async {
     Response response;
     try {
       
       ZtradeAPI.environment == "dev" 
       ?
       response = await get(
-        Uri.http(ZtradeAPI.localEnvUrl, "nonrole/category/show/"+id),
+        Uri.http(ZtradeAPI.localEnvUrl, "/nonrole/product/list/pgtest/"+id+"?page="+pageNumber),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
       )
       : 
       response = await get(
-        Uri.parse(ZtradeAPI.baseUrl + 'nonrole/category/show/'+id),
+        // "https://appstaging.ztrademm.com/nonrole/product/list/pgtest/26?page=1"
+        Uri.parse(ZtradeAPI.baseUrl + 'nonrole/product/list/pgtest/'+id+"?page="+pageNumber),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
@@ -61,7 +62,7 @@ class CategoryWithProduct extends DisposableProvider{
       } else if (response.statusCode == 404) {
         _error = true;
         _isSocket = false;
-        _errorMessage = 'No Jobs Found! ';
+        _errorMessage = 'No Products Found! ';
         _map = {};
         notifyListeners();
       } else {

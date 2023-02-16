@@ -110,13 +110,13 @@ class HorizontalSliderProducts extends StatelessWidget {
                                   padding: const EdgeInsets.only(left: 8.0),
                                   child: checkInWishList(wishLists, products[index]["id"].toString()) ?
 
-                                  Text(products[index]["name"] + "- Y ",
+                                  Text(products[index]["name"],
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.poppins(
                                         fontSize: 16.0,
                                       )):
-                                  Text(products[index]["name"] + "- N ",
+                                  Text(products[index]["name"],
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.poppins(

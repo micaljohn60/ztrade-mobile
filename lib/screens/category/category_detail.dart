@@ -11,72 +11,127 @@ import '../../providers/app_providers.dart';
 import '../../static/ztradeAPI.dart';
 import '../product_detail/product_detail.dart';
 
-class CategoryDetail extends StatelessWidget {
+class CategoryDetail extends StatefulWidget {
   String title;
   String categoryId;
   List<dynamic> wishLists;
-  CategoryDetail({Key key, this.title,this.categoryId,this.wishLists}) : super(key: key);
+  CategoryDetail({Key key, this.title, this.categoryId, this.wishLists})
+      : super(key: key);
 
   @override
+  State<CategoryDetail> createState() => _CategoryDetailState();
+}
+
+class _CategoryDetailState extends State<CategoryDetail> {
+  String _chosenValue = "1";
+  @override
   Widget build(BuildContext context) {
-   
     var size = MediaQuery.of(context).size;
-    context.read<CategoryWithProduct>().fetchData(categoryId);
+
+    context.read<CategoryWithProduct>().fetchData(widget.categoryId, "1");
 
     return WillPopScope(
-      onWillPop: (){
-        
+      onWillPop: () {
         AppProviders.disposeCategoryWithProductProvider(context);
       },
       child: Scaffold(
-        backgroundColor: secondayBackgroundColor,
-        body: Consumer<CategoryWithProduct>(
-        builder: ((context, value, child) {
-          return value.map.length == 0 && !value.error
-              ? Center(
-                  child: Text("Loading"),
-                )
-              : value.error
+          backgroundColor: secondayBackgroundColor,
+          body: Consumer<CategoryWithProduct>(
+            builder: ((context, value, child) {
+              return value.map.length == 0 && !value.error
                   ? Center(
-                      child: Text(value.errorMessage),
+                      child: Text("Loading"),
                     )
-                  : SingleChildScrollView(
-                      child: Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            TopBar(),
-                            value.map["product"].length == 0 ?
-                            NoItem(errorText : "No Item for This Category : " + title)
-                            :
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 8.0, right: 8.0, bottom: 8.0, top: 15.0),
-                              child: Text(
-                                "Category : " + title,
-                                style: GoogleFonts.poppins(
-                                    fontSize: 20.0, fontWeight: FontWeight.w600),
-                              ),
+                  : value.error
+                      ? Center(
+                          child: Text(value.errorMessage),
+                        )
+                      : SingleChildScrollView(
+                          child: Container(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                TopBar(),
+                                value.map["data"].length == 0
+                                    ? NoItem(
+                                        errorText:
+                                            "No Item for This Category : " +
+                                                widget.title)
+                                    : Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 8.0,
+                                            right: 8.0,
+                                            bottom: 8.0,
+                                            top: 15.0),
+                                        child: Text(
+                                          "Category : " + widget.title,
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 20.0,
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                      ),
+                                DecoratedBox(
+                                  decoration: BoxDecoration(
+                                      color: Colors
+                                          .white, //background color of dropdown button
+                                      border: Border.all(
+                                          color: primaryBackgroundColor,
+                                          width: 1), //border of dropdown button
+                                      borderRadius: BorderRadius.circular(
+                                          10), //border raiuds of dropdown button
+                                      ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left:10, right:10),
+                                    child: DropdownButton(
+                                      items: List<int>.generate(
+                                              value.map["last_page"],
+                                              (i) => i + 1)
+                                          .map<DropdownMenuItem<String>>(
+                                              (int value) {
+                                        return DropdownMenuItem<String>(
+                                          value: value.toString(),
+                                          child: Text(
+                                            value.toString(),
+                                            style: TextStyle(color: Colors.black),
+                                          ),
+                                        );
+                                      }).toList(),
+                                      value: _chosenValue,
+                                      onChanged: (String value) {
+                                        setState(() {
+                                          _chosenValue = value;
+                                          context
+                                              .read<CategoryWithProduct>()
+                                              .fetchData(widget.categoryId,
+                                                  _chosenValue);
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: GridView.count(
+                                      physics: NeverScrollableScrollPhysics(),
+                                      crossAxisCount: size.width > 600 ? 4 : 3,
+                                      childAspectRatio:
+                                          size.width > 600 ? 1 : 0.7,
+                                      shrinkWrap: true,
+                                      children: value.map["data"]
+                                          .map<Widget>((e) => listItem(
+                                              Colors.white,
+                                              "title",
+                                              context,
+                                              e))
+                                          .toList()),
+                                )
+                              ],
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: GridView.count(
-                                  physics: NeverScrollableScrollPhysics(),
-                                  crossAxisCount: size.width > 600 ? 4 : 3,
-                                  childAspectRatio: size.width > 600 ? 1 : 0.7,
-                                  shrinkWrap: true,
-                                  children: value.map["product"]
-                                      .map<Widget>((e) => listItem(
-                                          Colors.white, "title", context, e))
-                                      .toList()),
-                            )
-                          ],
-                        ),
-                      ),
-                    );
-        }),
-      )),
+                          ),
+                        );
+            }),
+          )),
     );
   }
 
@@ -86,16 +141,15 @@ class CategoryDetail extends StatelessWidget {
         child: InkWell(
           onTap: () {
             pushNewScreen(
-                context,
-                screen: ProductDetail(
-                  title: e["name"],
-                  itemDescription: e["item_description"],
-                  category: "No Data in API",
-                  images: e["product_image"],
-                  price: e["price"],
-                  favItems: wishLists ?? [],
-                  ),
-
+              context,
+              screen: ProductDetail(
+                title: e["name"],
+                itemDescription: e["item_description"],
+                category: "No Data in API",
+                images: e["product_image"],
+                price: e["price"],
+                favItems: widget.wishLists ?? [],
+              ),
             );
           },
           child: Container(
@@ -115,14 +169,20 @@ class CategoryDetail extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
                         image: DecorationImage(
-                            image: NetworkImage(
-                                ZtradeAPI.productImageUrl+e["product_image"][0]["thumbnails"].replaceAll('"',"")),
+                            image: NetworkImage(ZtradeAPI.productImageUrl +
+                                e["product_image"][0]["thumbnails"]
+                                    .replaceAll('"', "")),
                             fit: BoxFit.contain)),
                     height: 110.0,
                     width: 100,
                   ),
                 ),
-                Flexible(child: Text(e["name"],maxLines: 1,overflow: TextOverflow.ellipsis,))
+                Flexible(
+                    child: Text(
+                  e["name"],
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ))
               ],
             ),
           ),

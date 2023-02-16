@@ -24,7 +24,8 @@ class Input {
 }
 
 class Profile extends StatefulWidget {
-  const Profile({Key key}) : super(key: key);
+  String token;
+  Profile({Key key, this.token}) : super(key: key);
 
   @override
   State<Profile> createState() => _ProfileState();
@@ -41,6 +42,13 @@ class _ProfileState extends State<Profile> {
   String name;
   String factoryName;
 
+  Future<void> readToken() async {
+    final String value = await css.readValueName("session_id");
+    setState(() {
+      newValue = value;
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -49,21 +57,17 @@ class _ProfileState extends State<Profile> {
     super.initState();
   }
 
-  Future<void> readToken() async {
-    final String value = await css.readValueName("session_id");
-    setState(() {
-      newValue = value;
-    });
-  }
+  
 
    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    context.read<UserService>().fetchData(newValue);
+    print(widget.token);
+    context.read<UserService>().fetchData(widget.token);
     void updateProfile() async{
       final FormState form = _formKey.currentState;
-    Future<String> id = css.readValueName("sesson_id");
+    // Future<String> id = css.readValueName("sesson_id");
     if (!form.validate()) {
       ScaffoldMessenger.of(context)
           .showSnackBar(snackBar("Please Fix Error First"));
@@ -110,12 +114,16 @@ class _ProfileState extends State<Profile> {
     return newValue == null
         ? NoAuth()
         : 
+        newValue == "n"
+        ?
+        Text("Loading")
+        :
         Scaffold(
           body: RefreshIndicator(
             onRefresh: () async{
-               await context.read<UserService>().fetchData(newValue);
+               await context.read<UserService>().fetchData(widget.token);
             },
-            child: Consumer<UserService>(
+            child : Consumer<UserService>(
               builder: ((context, value, child) {
                 return value.map.length == 0 && !value.error ?
                 Center(
@@ -124,7 +132,7 @@ class _ProfileState extends State<Profile> {
                 :
                 value.error && newValue !=null
                 ? Center(
-                  child: CircularProgressIndicator(backgroundColor: primaryBackgroundColor),
+                  child: Text(value.errorMessage)
                 )
                 :
                 Scaffold(
@@ -155,7 +163,7 @@ class _ProfileState extends State<Profile> {
                                                   as ImageProvider
                                               : AssetImage(image)
                                           : NetworkImage(
-                                              "https://i.pinimg.com/736x/52/b3/42/52b3426275182447522e3fb53711e02e.jpg"),
+                                              "https://img.freepik.com/free-icon/waiter_318-505999.jpg"),
                                       fit: BoxFit.contain),
                                   border: Border.all(
                                       color: secondayBackgroundColor,

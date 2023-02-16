@@ -154,7 +154,7 @@ class _CategoryItemsState extends State<CategoryItems> {
                     width: 100,
                   ),
                 ),
-                Text(e["name"] + e["id"].toString(),textAlign: TextAlign.center,)
+                Text(e["name"].toString(),textAlign: TextAlign.center,)
               ],
             ),
           ),

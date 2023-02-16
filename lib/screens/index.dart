@@ -30,14 +30,12 @@ class _IndexState extends State<Index> {
     setState(() {
       newValue = value;
     });
-  }
-
-  
+  } 
 
   List<Widget> _buildScreens(){
     return(
       [
-        Home(),
+        Home(token: newValue),
         Category(isHomePage: true,),
         About(),
         Chat(),

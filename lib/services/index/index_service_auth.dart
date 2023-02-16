@@ -75,9 +75,10 @@ class IndexServiceAuth extends DisposableProvider{
       }
       else {
         notifyListeners();
+        
         _error = true;
         _isSocket = false;
-        _errorMessage = 'Not Found! ';
+        _errorMessage = "mm.. we hace unstable connection here";
         _map = {};
       }
     } on SocketException catch (e) {

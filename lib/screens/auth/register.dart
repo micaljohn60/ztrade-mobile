@@ -24,7 +24,7 @@ class _RegisterState extends State<Register> {
   String password;
   String reTypePassword;
   String factoryName;
-  bool isLoading = false;
+  bool isLoading = true;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   void _handleSubmit() async {
@@ -147,12 +147,12 @@ class _RegisterState extends State<Register> {
                         "Sign Up",
                         style: GoogleFonts.poppins(fontSize: 25.0),
                       ),
-                      isLoading ?
-                      const Icon(
-                        // <-- Icon
-                        Icons.circle,
-                        size: 24.0,
-                      ):
+                      // isLoading ?
+                      // const Icon(
+                      //   // <-- Icon
+                      //   Icons.circle,
+                      //   size: 24.0,
+                      // ):
                       const Icon(
                         // <-- Icon
                         Icons.navigate_next_rounded,

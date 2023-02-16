@@ -67,7 +67,7 @@ class CarouselSliderService with ChangeNotifier {
         notifyListeners();
         _error = true;
         _isSocket = false;
-        _errorMessage = 'Not Found! ';
+        _errorMessage = 'Not z Found! ';
         _map = [];
       }
     } on SocketException catch (e) {

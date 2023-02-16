@@ -10,9 +10,9 @@ class ProductDescription extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-       ProductText(prefix: "Brand", data: "Apple",),
-       ProductText(prefix: "Color", data: "Purple, Red, Silver",),
-       ProductText(prefix: "Storage Capacity", data: "128GB",),
+      //  ProductText(prefix: "Category", data: "Apple",),
+      //  ProductText(prefix: "Color", data: "Purple, Red, Silver",),
+      //  ProductText(prefix: "Storage Capacity", data: "128GB",),
       ],
     );
   }

@@ -15,7 +15,7 @@ Future<ApiResponse> loginUser(String email, String password,) async{
     ZtradeAPI.environment == "dev" ?
 
     response = await post(
-        Uri.http(ZtradeAPI.localEnvUrl, "api/login"),
+        Uri.http(ZtradeAPI.localEnvUrl, "api/login/user"),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
@@ -27,10 +27,10 @@ Future<ApiResponse> loginUser(String email, String password,) async{
       )
       :
       response = await post(
-        Uri.parse(ZtradeAPI.baseUrl + 'api/login'),
-        // headers: {
-        //   'Authorization': 'Bearer $token',
-        // }
+        Uri.parse(ZtradeAPI.baseUrl + 'api/login/user'),
+        headers: {
+          'accept' : 'application/json'
+        },
         body: {
           'email' : email,
           'password' : password

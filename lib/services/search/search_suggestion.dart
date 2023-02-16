@@ -4,40 +4,41 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 import 'package:omni_mobile_app/abstract/disposable_provider.dart';
-import 'package:omni_mobile_app/static/ztradeAPI.dart';
 
-class CategoryService extends DisposableProvider {
-  CategoryService();
+import '../../static/ztradeAPI.dart';
 
-  Map<String,dynamic> _map = {};
-  Map<String,dynamic> _reverseMap = {};
+class SearchSuggestionService extends DisposableProvider{
+  SearchSuggestionService();
+
+  Map<dynamic,dynamic> _map = {};
+  List<String> _stringData = [];
+  List<dynamic> _reverseMap = [];
   bool _error = false;
-  bool _isEmpty = false;
   String _errorMessage = '';
   String key;
   bool _isSocket = false;
   Map<dynamic,dynamic> get map => _map;
-  Map<String,dynamic> get reverseMap => _reverseMap;
+  List<dynamic> get reverseMap => _reverseMap;
+  List<String> get stringData => _stringData;
   bool get error => _error;
-  bool get empty => _isEmpty;
   bool get socket => _isSocket;
   String get errorMessage => _errorMessage;
 
-  Future<void> fetchData(String userId) async {
+  Future<void> get fetchData async {
     Response response;
     try {
       
       ZtradeAPI.environment == "dev" 
       ?
       response = await get(
-        Uri.http(ZtradeAPI.localEnvUrl, "nonrole/category/list/user/"+userId),
+        Uri.http(ZtradeAPI.localEnvUrl, "nonrole/search/suggestions"),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
       )
       : 
       response = await get(
-        Uri.parse(ZtradeAPI.baseUrl + "nonrole/category/list/user/"+userId),
+        Uri.parse(ZtradeAPI.baseUrl + "nonrole/search/suggestions"),
         // headers: {
         //   'Authorization': 'Bearer $token',
         // }
@@ -46,8 +47,8 @@ class CategoryService extends DisposableProvider {
       if (response.statusCode == 200) {
         try {
           _map = jsonDecode(response.body);
-          _isEmpty =  _map.isEmpty ? true : false;
-          // _reverseMap = _map.reversed.toList();
+          List<String> c = List<String>.from(_map['productSuggestion'] as List);
+          _stringData = c;
           _error = false;
           _isSocket = false;
         } catch (e) {
@@ -61,14 +62,22 @@ class CategoryService extends DisposableProvider {
       } else if (response.statusCode == 404) {
         _error = true;
         _isSocket = false;
-        _errorMessage = 'No Item Found! ';
+        _errorMessage = 'No Product Found! ';
         _map = {};
         notifyListeners();
-      } else {
+      } 
+      else if(response.statusCode == 403){
         notifyListeners();
         _error = true;
         _isSocket = false;
-        _errorMessage = 'mmm... we have some unstable network issues! ';
+        _errorMessage = 'Permission Denied';
+        _map = {};
+      }
+      else {
+        notifyListeners();
+        _error = true;
+        _isSocket = false;
+        _errorMessage = 'Not Found! ';
         _map = {};
       }
     } on SocketException catch (e) {
@@ -83,6 +92,5 @@ class CategoryService extends DisposableProvider {
   @override
   void disposeValue() {
     _map = {};
-    // TODO: implement disposeValue
   }
 }

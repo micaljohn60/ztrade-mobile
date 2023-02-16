@@ -66,9 +66,14 @@ class FavouriteItems extends StatelessWidget {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               
-                              child: Text(                              
-                                products[index]["product"]["item_description"],
-                                overflow: TextOverflow.ellipsis,),
+                              child: SizedBox(
+                                width: 150,
+                                child: Text(        
+                                                       
+                                  products[index]["product"]["item_description"],
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,),
+                              ),
                             )
                           ],
                         )

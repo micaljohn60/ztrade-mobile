@@ -77,7 +77,7 @@ class IndexService extends DisposableProvider{
         notifyListeners();
         _error = true;
         _isSocket = false;
-        _errorMessage = 'Not Found! ';
+        _errorMessage = 'mmm... we have some unstable network issues!';
         _map = {};
       }
     } on SocketException catch (e) {

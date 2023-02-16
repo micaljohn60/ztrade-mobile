@@ -79,7 +79,7 @@ class UserWishListService extends DisposableProvider{
         notifyListeners();
         _error = true;
         _isSocket = false;
-        _errorMessage = 'Not Found! ';
+        _errorMessage = 'Not t Found! ';
         _map = [];
       }
     } on SocketException catch (e) {

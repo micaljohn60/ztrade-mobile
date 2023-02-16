@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
+import 'package:omni_mobile_app/constants/color.dart';
 import 'package:omni_mobile_app/screens/about/components/about_header.dart';
 import 'package:omni_mobile_app/screens/category/components/loading/loading.dart';
 import 'package:omni_mobile_app/services/aboutus/aboutus_service.dart';
@@ -26,7 +27,7 @@ class _AboutState extends State<About> {
         return value.map.length ==0 && !value.error 
         ?
         Center(
-          child: Loading(height: 160,),
+          child: CircularProgressIndicator(color: primaryBackgroundColor,),
         )
         :
         value.error?
