@@ -69,7 +69,7 @@ class _ProductDetailImageState extends State<ProductDetailImage> {
                     border: Border.all(color: primaryBackgroundColor,width: 2.0),
                       image: DecorationImage(
                         image: NetworkImage(ZtradeAPI.productImageUrl+widget.images[index]["thumbnails"].replaceAll('"', '')),
-                        fit: BoxFit.contain
+                        fit: BoxFit.cover
                       )
                   ),
                 ),

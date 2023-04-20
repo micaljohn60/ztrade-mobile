@@ -5,6 +5,7 @@ import 'package:omni_mobile_app/constants/color.dart';
 import 'package:omni_mobile_app/screens/auth/message.dart';
 import 'package:omni_mobile_app/screens/category/components/loading/loading.dart';
 import 'package:omni_mobile_app/services/authentication/register_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../share/components/snackbar/snackbar.dart';
 
@@ -26,7 +27,7 @@ class _RegisterState extends State<Register> {
   String factoryName;
   bool isLoading = true;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
+  
   void _handleSubmit() async {
     final FormState form = _formKey.currentState;
     if (!form.validate()) {

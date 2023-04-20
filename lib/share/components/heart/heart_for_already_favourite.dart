@@ -8,18 +8,18 @@ import 'package:omni_mobile_app/services/wishlist_service/wish_list_service.dart
 import 'package:omni_mobile_app/share/components/snackbar/snackbar.dart';
 import 'package:provider/provider.dart';
 
-class Heart extends StatefulWidget {
+class HeartForFavourite extends StatefulWidget {
   String userId;
   String productId;
   bool isWishList;
   List<dynamic> wishLists;
-  Heart({Key key, this.userId, this.productId,this.isWishList,this.wishLists}) : super(key: key);
+  HeartForFavourite({Key key, this.userId, this.productId,this.isWishList,this.wishLists}) : super(key: key);
 
   @override
-  State<Heart> createState() => _HeartState();
+  State<HeartForFavourite> createState() => _HeartState();
 }
 
-class _HeartState extends State<Heart> {
+class _HeartState extends State<HeartForFavourite> {
 
   bool isFav = false;
   bool favWish = true;
@@ -109,38 +109,21 @@ class _HeartState extends State<Heart> {
         if(myFav){
           setState(() {
             favWish = false;
-            isNewWishlist = false;
+            
           });
           _apiResponse = await removeFromFavourite(widget.userId, widget.productId);
           ScaffoldMessenger.of(context)
+          
               .showSnackBar(snackBar("Removed From Favourite"));
-
+              await context.read<UserWishListService>().fetchWishListData(widget.userId);
+setState(() {
+            favWish = true;
+            
+          });
           // await context.read<UserWishListService>().fetchWishListData(widget.userId);
           
         }
-        else{
-          if(isNewWishlist){
-              setState(() {
-              favWish = true;
-              isNewWishlist = false;
-            });
-            
-            _apiResponse = await removeFromFavourite(widget.userId, widget.productId);
-            ScaffoldMessenger.of(context)
-              .showSnackBar(snackBar("Removed from Favourite"));
-              
-          }
-          else{
-             setState(() {
-            favWish = false;
-            isNewWishlist = true;
-          });
-            
-            _apiResponse = await addToFavourite(widget.userId, widget.productId);
-            ScaffoldMessenger.of(context)
-              .showSnackBar(snackBar("Added To Favourite"));
-          }
-        }
+        
       }
       else{
          showDialog(

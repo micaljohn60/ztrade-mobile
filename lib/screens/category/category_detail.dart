@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:omni_mobile_app/constants/color.dart';
 import 'package:omni_mobile_app/services/category/category_with_product.dart';
+import 'package:omni_mobile_app/share/components/horizontal_slider_products/components/price_tag.dart';
 import 'package:omni_mobile_app/share/components/no_items/no_item.dart';
 import 'package:omni_mobile_app/share/components/topbar.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
@@ -23,9 +24,23 @@ class CategoryDetail extends StatefulWidget {
 }
 
 class _CategoryDetailState extends State<CategoryDetail> {
+  String calculatePrice(String price, int percentage){
+
+          if(percentage > 0){
+          double data = int.parse(price) + (int.parse(price) * percentage / 100);
+          return data.toString();
+          }
+          else{
+          double data = int.parse(price) - (int.parse(price) * percentage / 100);
+          return data.toString();
+          }
+
+        }
+
   String _chosenValue = "1";
   @override
   Widget build(BuildContext context) {
+    
     var size = MediaQuery.of(context).size;
 
     context.read<CategoryWithProduct>().fetchData(widget.categoryId, "1");
@@ -114,9 +129,9 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                   padding: const EdgeInsets.all(8.0),
                                   child: GridView.count(
                                       physics: NeverScrollableScrollPhysics(),
-                                      crossAxisCount: size.width > 600 ? 4 : 3,
+                                      crossAxisCount: size.width > 600 ? 3 : 2,
                                       childAspectRatio:
-                                          size.width > 600 ? 1 : 0.7,
+                                          size.width > 600 ? 0.9 : 0.7,
                                       shrinkWrap: true,
                                       children: value.map["data"]
                                           .map<Widget>((e) => listItem(
@@ -147,7 +162,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                 itemDescription: e["item_description"],
                 category: "No Data in API",
                 images: e["product_image"],
-                price: e["price"],
+                price: calculatePrice(e["price"],e["percentage"]["percentage"]),
                 favItems: widget.wishLists ?? [],
               ),
             );
@@ -159,7 +174,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                   spreadRadius: 3.0,
                   blurRadius: 5.0)
             ], color: color, borderRadius: BorderRadius.circular(8.0)),
-            height: 160.0,
+            height: 80.0,
             width: 100,
             child: Column(
               children: [
@@ -173,16 +188,29 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                 e["product_image"][0]["thumbnails"]
                                     .replaceAll('"', "")),
                             fit: BoxFit.contain)),
-                    height: 110.0,
-                    width: 100,
+                    height: 140.0,
+                    width: 120,
                   ),
                 ),
                 Flexible(
-                    child: Text(
-                  e["name"],
-                  maxLines: 1,
+
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                      child: Text(
+                  e["name"] + " " +e["item_description"],
+                  style: GoogleFonts.poppins(fontSize:15.0, color: shadowColorLight,fontWeight: FontWeight.w500 ),
+                  maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                ))
+                ),
+                    )),
+
+                Flexible(
+
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: PriceTag(price: calculatePrice(e["price"],e["percentage"]["percentage"]) ,),
+                    )
+                    )
               ],
             ),
           ),

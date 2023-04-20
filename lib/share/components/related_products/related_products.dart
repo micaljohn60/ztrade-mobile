@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:omni_mobile_app/screens/category/components/loading/loading.dart';
 import 'package:omni_mobile_app/screens/product_detail/product_detail.dart';
 import 'package:omni_mobile_app/services/product/product.dart';
+import 'package:omni_mobile_app/services/product/related_products.dart';
 import 'package:omni_mobile_app/share/components/heart/heart.dart';
 import 'package:omni_mobile_app/share/components/horizontal_slider_products/components/price_tag.dart';
 import 'package:omni_mobile_app/share/components/horizontal_slider_products/components/product_title.dart';
@@ -13,11 +14,17 @@ import 'package:provider/provider.dart';
 class RelatedProducts extends StatefulWidget {
   String title;
   String userId;
+  String data;
   List<dynamic> products;
   List<dynamic> wishLists;
 
   RelatedProducts(
-      {Key key, this.title, this.userId, this.products, this.wishLists})
+      {Key key,
+      this.title,
+      this.userId,
+      this.products,
+      this.wishLists,
+      this.data})
       : super(key: key);
 
   @override
@@ -27,6 +34,16 @@ class RelatedProducts extends StatefulWidget {
 class _RelatedProductsState extends State<RelatedProducts> {
   @override
   Widget build(BuildContext context) {
+    String calculatePrice(String price, int percentage) {
+      if (percentage > 0) {
+        double data = int.parse(price) + (int.parse(price) * percentage / 100);
+        return data.toString();
+      } else {
+        double data = int.parse(price) - (int.parse(price) * percentage / 100);
+        return data.toString();
+      }
+    }
+
     bool checkInWishList(List<dynamic> list, String productId) {
       for (int i = 0; i < list.length; i++) {
         if (list[i]["product_id"].toString() == productId) {
@@ -36,9 +53,9 @@ class _RelatedProductsState extends State<RelatedProducts> {
       return false;
     }
 
-    context.read<ProductService>().fetchData;
+    context.read<RelatedProductService>().fetchData(widget.data, widget.userId);
     var size = MediaQuery.of(context).size;
-    return Consumer<ProductService>(
+    return Consumer<RelatedProductService>(
       builder: ((context, value, child) {
         return value.map.length == 0 && !value.error
             ? Center(
@@ -65,7 +82,7 @@ class _RelatedProductsState extends State<RelatedProducts> {
                           height: 280,
                           width: size.width,
                           child: ListView.builder(
-                            itemCount: value.map.length,
+                            itemCount: value.map["products"].length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) => Padding(
                               padding: const EdgeInsets.all(6.0),
@@ -74,13 +91,18 @@ class _RelatedProductsState extends State<RelatedProducts> {
                                   pushNewScreen(context,
                                       screen: ProductDetail(
                                         favItems: [],
-                                        title: value.map[index]["name"],
-                                        price: value.map[index]["price"],
-                                        itemDescription: value.map[index]
-                                            ["item_description"],
-                                        category: value.map[index]["category"]
+                                        title: value.map["products"][index]
                                             ["name"],
-                                        images: value.map[index]
+                                        price: calculatePrice(
+                                            value.map["products"][index]
+                                                ["price"],
+                                            value.map["products"][index]
+                                                ["percentage"]["percentage"]),
+                                        itemDescription: value.map["products"]
+                                            [index]["item_description"],
+                                        category: value.map["products"][index]
+                                            ["category"]["name"],
+                                        images: value.map["products"][index]
                                             ["product_image"],
                                       ));
                                 },
@@ -105,18 +127,21 @@ class _RelatedProductsState extends State<RelatedProducts> {
                                             alignment: Alignment.centerRight,
                                             child: Heart(
                                               userId: widget.userId,
-                                              productId: value.map[index]["id"]
+                                              productId: value.map["products"]
+                                                      [index]["id"]
                                                   .toString(),
                                               wishLists: widget.wishLists,
                                               isWishList: checkInWishList(
-                                                  widget.wishLists,
-                                                   value.map[index]["id"]
+                                                  value.map["whishlists"],
+                                                  value.map["products"][index]
+                                                          ["id"]
                                                       .toString()),
                                             )),
                                         ProductImage(
                                           imgUrl: ZtradeAPI.productImageUrl +
-                                              value.map[index]["product_image"]
-                                                      [0]["thumbnails"]
+                                              value.map["products"][index]
+                                                      ["product_image"][0]
+                                                      ["thumbnails"]
                                                   .replaceAll('"', ''),
                                           isFav: false,
                                         ),
@@ -127,11 +152,17 @@ class _RelatedProductsState extends State<RelatedProducts> {
                                             Padding(
                                               padding: const EdgeInsets.only(
                                                   left: 8.0),
-                                              child: Text(
-                                                  value.map[index]["name"],
-                                                  style: GoogleFonts.poppins(
-                                                    fontSize: 16.0,
-                                                  )),
+                                              child: SizedBox(
+                                                width: MediaQuery.of(context).size.width/2.4,
+                                                child: Text(
+                                                    value.map["products"][index]
+                                                        ["name"],
+                                                        overflow : TextOverflow.ellipsis,
+                                                    style: GoogleFonts.poppins(
+                                                      fontSize: 16.0,
+                                                      
+                                                    )),
+                                              ),
                                             ),
                                           ],
                                         ),
@@ -139,7 +170,12 @@ class _RelatedProductsState extends State<RelatedProducts> {
                                           padding: const EdgeInsets.only(
                                               left: 8.0, top: 5.0),
                                           child: PriceTag(
-                                              price: value.map[index]["price"]),
+                                              price: calculatePrice(
+                                                  value.map["products"][index]
+                                                      ["price"],
+                                                  value.map["products"][index]
+                                                          ["percentage"]
+                                                      ["percentage"])),
                                         )
                                       ],
                                     ),
@@ -171,7 +207,7 @@ class ProductImage extends StatelessWidget {
         height: isFav ? 120 : 150,
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: NetworkImage(imgUrl), fit: BoxFit.cover)),
+                image: NetworkImage(imgUrl), fit: BoxFit.contain)),
       ),
     );
   }

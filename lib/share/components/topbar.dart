@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:omni_mobile_app/api/api_response.dart';
 import 'package:omni_mobile_app/constants/color.dart';
+import 'package:omni_mobile_app/providers/app_providers.dart';
 import 'package:omni_mobile_app/screens/profile/profile.dart';
 import 'package:omni_mobile_app/screens/search/search.dart';
 import 'package:omni_mobile_app/services/search/search_suggestion.dart';
@@ -15,13 +17,11 @@ class TopBar extends StatefulWidget {
   State<TopBar> createState() => _TopBarState();
 }
 
-
-
 class _TopBarState extends State<TopBar> {
+  ApiResponse _apiResponse = ApiResponse();
+  CustomSecureStorage css = CustomSecureStorage();
+  String newValue = "n";
 
- CustomSecureStorage css = CustomSecureStorage();
- String newValue = "n";
-  
   Future<void> readToken() async {
     final String value = await css.readValueName("session_id");
     setState(() {
@@ -29,7 +29,7 @@ class _TopBarState extends State<TopBar> {
     });
   }
 
-    @override
+  @override
   void initState() {
     // TODO: implement initState
 
@@ -37,11 +37,10 @@ class _TopBarState extends State<TopBar> {
     super.initState();
   }
 
-
   List<String> suggestons = [];
   @override
   Widget build(BuildContext context) {
-    context.read<SearchSuggestionService>().fetchData;
+    context.read<SearchSuggestionService>().fetchData(newValue);
     var size = MediaQuery.of(context).size;
     return Container(
       decoration: BoxDecoration(color: primaryBackgroundColor),
@@ -82,15 +81,21 @@ class _TopBarState extends State<TopBar> {
                                     FocusNode focusNode,
                                     VoidCallback onFieldSubmitted) {
                                   return TextField(
-                                    style: TextStyle(color: secondayBackgroundColor),
-                                    onSubmitted: (value) {
+                                    
+                                    style: TextStyle(
+                                        color: secondayBackgroundColor),
+                                    onChanged: (value){AppProviders.disposeSearch(context);},
+                                    onSubmitted: (value) async {
+                                      
                                       pushNewScreen(
                                         context,
                                         screen: Search(
+                                          id: newValue,
                                           text: value,
                                         ),
                                         withNavBar: true,
                                       );
+                                      
                                     },
                                     decoration: InputDecoration(
                                         prefixIcon: Icon(UniconsLine.search,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:omni_mobile_app/screens/product_detail/product_detail.dart';
+import 'package:omni_mobile_app/share/components/heart/heart.dart';
+import 'package:omni_mobile_app/share/components/heart/heart_for_already_favourite.dart';
 import 'package:omni_mobile_app/share/components/horizontal_slider_products/components/price_tag.dart';
 import 'package:omni_mobile_app/share/components/horizontal_slider_products/components/product_title.dart';
 import 'package:omni_mobile_app/share/components/horizontal_slider_products/most_popular.dart';
@@ -8,13 +10,31 @@ import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
 class FavouriteItems extends StatelessWidget {
   List<dynamic> products;
+  String userID;
   FavouriteItems({
     Key key,
-    this.products
+    this.products,
+    this.userID
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
+    String calculatePrice(String price, int percentage){
+
+      if(percentage > 0){
+       double data = int.parse(price) + (int.parse(price) * percentage / 100);
+       return data.toString();
+      }
+      else{
+       double data = int.parse(price) - (int.parse(price) * percentage / 100);
+       return data.toString();
+      }
+
+    }
+
+
+
     return Container(
       height: MediaQuery.of(context).size.height/1.24,
       child: ListView.builder(
@@ -27,11 +47,12 @@ class FavouriteItems extends StatelessWidget {
                     pushNewScreen(context,
                         screen: ProductDetail(
                           title: products[index]["product"]["name"],
-                          price: products[index]["product"]["price"],
+                          price: calculatePrice( products[index]["product"]["price"],products[index]["product"]["percentage"]["percentage"] ),
                           itemDescription: products[index]["product"]["item_description"],
                           category: products[index]["product"]["category"]["name"],
                           images: products[index]["product"]["product_image"],
                           favItems: products,
+                          
                         ));
                   },
             child: Container(
@@ -52,16 +73,20 @@ class FavouriteItems extends StatelessWidget {
                     Row(
                       children: [
                         ProductImage(isFav: true,imgUrl: ZtradeAPI.productImageUrl + products[index]["product"]["product_image"][0]["thumbnails"].replaceAll('"', ''),),
+
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+  
                             Padding(
                               padding: const EdgeInsets.all(3.0),
-                              child: ProductTitle(text: products[index]["product"]["name"]),
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width/2.3,
+                                child: ProductTitle(text: products[index]["product"]["name"])),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: PriceTag(price: products[index]["product"]["price"]),
+                              child: PriceTag(price:  calculatePrice( products[index]["product"]["price"],products[index]["product"]["percentage"]["percentage"] )),
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -74,6 +99,16 @@ class FavouriteItems extends StatelessWidget {
                                   maxLines: 1,
                                   overflow: TextOverflow.ellipsis,),
                               ),
+                            )
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            HeartForFavourite(
+                              userId: userID,
+                              productId: products[index]["product"]["id"].toString(),
+                              wishLists: [],
+                              isWishList: true,
                             )
                           ],
                         )

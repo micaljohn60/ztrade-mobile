@@ -15,6 +15,7 @@ import 'package:omni_mobile_app/services/category/category_with_product.dart';
 import 'package:omni_mobile_app/services/index/index_service.dart';
 import 'package:omni_mobile_app/services/index/index_service_auth.dart';
 import 'package:omni_mobile_app/services/product/product.dart';
+import 'package:omni_mobile_app/services/product/related_products.dart';
 import 'package:omni_mobile_app/services/search/search_service.dart';
 import 'package:omni_mobile_app/services/search/search_suggestion.dart';
 import 'package:omni_mobile_app/services/slider/carousel_slider_service.dart';
@@ -87,7 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
         ChangeNotifierProvider(create: (context)=> UserService()),
         ChangeNotifierProvider(create: (context)=> UserWishListService()),
         ChangeNotifierProvider(create: (context)=> AboutUsService()),
-        ChangeNotifierProvider(create: (context)=> SearchSuggestionService())
+        ChangeNotifierProvider(create: (context)=> SearchSuggestionService()),
+        ChangeNotifierProvider(create: (context)=> RelatedProductService())
       ],
       child: MaterialApp(
         navigatorKey: myNavigatorKey,

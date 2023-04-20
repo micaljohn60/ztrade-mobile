@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:omni_mobile_app/constants/color.dart';
+import 'package:omni_mobile_app/providers/app_providers.dart';
 import 'package:omni_mobile_app/screens/about/about.dart';
 import 'package:omni_mobile_app/screens/category/category.dart';
 import 'package:omni_mobile_app/screens/chat/chat.dart';
@@ -91,50 +92,45 @@ class _IndexState extends State<Index> {
 
   @override
   Widget build(BuildContext context) {
+    
     PersistentTabController _controller;
 
     _controller = PersistentTabController(initialIndex: 0);
 
-    return  RefreshIndicator(
-      onRefresh: () async {
-        await context.read<IndexService>().fetchData;
-        await context.read<IndexServiceAuth>().fetchData(newValue);
-      },
-      child: Container(
-          decoration: BoxDecoration(
-            color: primaryBackgroundColor
-          ),
-          child: SafeArea(
-            child: PersistentTabView(
-              context,
-              controller: _controller,
-              screens: _buildScreens(),
-              items: _navBarsItems(),
-              confineInSafeArea: true,
-              backgroundColor: primaryBackgroundColor,
-              handleAndroidBackButtonPress: true,
-              resizeToAvoidBottomInset: true,
-              stateManagement: true,
-              hideNavigationBarWhenKeyboardShows: true,
-              decoration: const NavBarDecoration(
-                colorBehindNavBar: secondayTextColor
-              ),
-              popAllScreensOnTapOfSelectedTab: true,
-              popActionScreens: PopActionScreensType.all,
-              itemAnimationProperties: const ItemAnimationProperties(
-                duration: Duration(milliseconds: 200),
-                curve: Curves.ease,
-              ),
-              screenTransitionAnimation: const ScreenTransitionAnimation(
-                animateTabTransition: true,
-                curve: Curves.bounceIn,
-                duration: Duration(milliseconds: 200),
-              ),
-              navBarStyle: NavBarStyle.style13,
-              
-              ),
-          ),
+    return  Container(
+        decoration: BoxDecoration(
+          color: primaryBackgroundColor
         ),
-    );
+        child: SafeArea(
+          child: PersistentTabView(
+            context,
+            controller: _controller,
+            screens: _buildScreens(),
+            items: _navBarsItems(),
+            confineInSafeArea: true,
+            backgroundColor: primaryBackgroundColor,
+            handleAndroidBackButtonPress: true,
+            resizeToAvoidBottomInset: true,
+            stateManagement: true,
+            hideNavigationBarWhenKeyboardShows: true,
+            decoration: const NavBarDecoration(
+              colorBehindNavBar: secondayTextColor
+            ),
+            popAllScreensOnTapOfSelectedTab: true,
+            popActionScreens: PopActionScreensType.all,
+            itemAnimationProperties: const ItemAnimationProperties(
+              duration: Duration(milliseconds: 200),
+              curve: Curves.ease,
+            ),
+            screenTransitionAnimation: const ScreenTransitionAnimation(
+              animateTabTransition: true,
+              curve: Curves.bounceIn,
+              duration: Duration(milliseconds: 200),
+            ),
+            navBarStyle: NavBarStyle.style13,
+            
+            ),
+        ),
+      );
   }
 }

@@ -7,6 +7,6 @@ class ProductTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(text,style: GoogleFonts.poppins(fontSize: 20.0, fontWeight: FontWeight.w700),textAlign: TextAlign.left,);
+    return Text(text,style: GoogleFonts.poppins(fontSize: 18.0, fontWeight: FontWeight.w700),textAlign: TextAlign.left,overflow: TextOverflow.ellipsis,);
   }
 }

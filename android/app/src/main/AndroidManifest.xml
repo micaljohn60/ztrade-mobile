@@ -2,7 +2,7 @@
     package="com.example.omni_mobile_app">
     <uses-permission android:name="android.permission.INTERNET"/> 
    <application
-        android:label="omni_mobile_app"
+        android:label="Z Trade"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

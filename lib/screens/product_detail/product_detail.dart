@@ -104,7 +104,7 @@ class _ProductDetailState extends State<ProductDetail> {
                         ),
                       ),
                       
-                      RelatedProducts(title: "Related Products",products: [],wishLists: widget.favItems,userId: newValue,)
+                      RelatedProducts(title: "Related Products",products: [],wishLists: widget.favItems ?? [],userId: newValue,data: widget.title,)
                     ],
                   ),
                 ),

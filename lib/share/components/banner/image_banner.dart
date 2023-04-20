@@ -9,15 +9,15 @@ class ImageBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(top: 8.0),
       child: Container(
         width: size.width,
         height: 150,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10.0),
+          
           image: DecorationImage(
             image: NetworkImage(ZtradeAPI.baseUrl + "storage/banner_image/"+image),
-            fit: BoxFit.cover,
+            fit: BoxFit.contain,
             
           )
         ),

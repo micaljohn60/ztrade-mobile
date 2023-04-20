@@ -33,7 +33,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: primaryBackgroundColor,
+      backgroundColor: secondayBackgroundColor,
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -57,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   "Z Trade Myanmar",
                   style: TextStyle(
                       fontSize: 36,
-                      color: Colors.white,
+                      color: primaryTextColor,
                       fontWeight: FontWeight.bold),
                 ),
                 tween: Tween<double>(begin: 0, end: 1),

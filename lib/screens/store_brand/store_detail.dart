@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:omni_mobile_app/screens/category/components/loading/loading.dart';
 import 'package:omni_mobile_app/services/brand/store_with_products.dart';
+import 'package:omni_mobile_app/share/components/horizontal_slider_products/components/price_tag.dart';
 import 'package:omni_mobile_app/share/components/topbar.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import '../../constants/color.dart';
 import '../../static/ztradeAPI.dart';
 import '../product_detail/product_detail.dart';
 
@@ -12,6 +14,19 @@ class StoreDetail extends StatelessWidget {
   String title;
   String storeId;
   StoreDetail({Key key, this.title,this.storeId}) : super(key: key);
+
+  String calculatePrice(String price, int percentage){
+
+          if(percentage > 0){
+          double data = int.parse(price) + (int.parse(price) * percentage / 100);
+          return data.toString();
+          }
+          else{
+          double data = int.parse(price) - (int.parse(price) * percentage / 100);
+          return data.toString();
+          }
+
+        }
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +63,8 @@ class StoreDetail extends StatelessWidget {
                           ),
                           GridView.count(
                               physics: NeverScrollableScrollPhysics(),
-                              crossAxisCount: size.width > 600 ? 4 : 3,
-                              childAspectRatio: size.width > 600 ? 1 : 0.7,
+                              crossAxisCount: size.width > 600 ? 3 : 2,
+                              childAspectRatio: size.width > 600 ? 0.9 : 0.7,
                               shrinkWrap: true,
                               children: value.map["data"]["product"]
                                   .map<Widget>((e) => listItem(
@@ -94,11 +109,22 @@ class StoreDetail extends StatelessWidget {
                             image: NetworkImage(
                                 ZtradeAPI.productImageUrl+e["product_image"][0]["thumbnails"].replaceAll('"',"")),
                             fit: BoxFit.contain)),
-                    height: 110.0,
-                    width: 100,
+                    height: 140.0,
+                    width: 120,
                   ),
                 ),
-                Text(e["name"])
+                Text( e["name"] + " " +e["item_description"],
+                style: GoogleFonts.poppins(fontSize:15.0, color: shadowColorLight,fontWeight: FontWeight.w500 ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis),
+                  Flexible(
+
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: PriceTag(price: calculatePrice(e["price"],e["percentage"]["percentage"]) ,),
+                    )
+                    )
+              
               ],
             ),
           ),

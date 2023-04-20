@@ -13,6 +13,7 @@ import 'package:omni_mobile_app/services/secure_storage/custom_secure_storage.da
 import 'package:omni_mobile_app/share/components/snackbar/snackbar.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Input {
   Icon icon;
@@ -32,6 +33,8 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  final Uri _privacyurl = Uri.parse('https://webstaging.ztrademm.com/privacypolicy');
+  final Uri _termsurl = Uri.parse('https://webstaging.ztrademm.com/termsandconditions');
   ApiResponse _apiResponse = ApiResponse();
   CustomSecureStorage css = CustomSecureStorage();
   String newValue = "n";
@@ -48,6 +51,15 @@ class _ProfileState extends State<Profile> {
       newValue = value;
     });
   }
+
+  void _launchUrl() async {
+    if (!await launchUrl(_privacyurl)) throw 'Could not launch $_privacyurl';
+  }
+
+  void _launchUrl2() async {
+    if (!await launchUrl(_termsurl)) throw 'Could not launch $_termsurl';
+  }
+
 
   @override
   void initState() {
@@ -76,7 +88,7 @@ class _ProfileState extends State<Profile> {
         // isLoading = true;
       });
       form.save();
-      _apiResponse = await updateUser(name, factoryName,newValue);
+      _apiResponse = await updateUser(name, factoryName,newValue,profilePicture);
     }
     if (_apiResponse.apiError == null) {
       ScaffoldMessenger.of(context)
@@ -163,7 +175,7 @@ class _ProfileState extends State<Profile> {
                                                   as ImageProvider
                                               : AssetImage(image)
                                           : NetworkImage(
-                                              "https://img.freepik.com/free-icon/waiter_318-505999.jpg"),
+                                              "https://api.ztrademm.com/storage/profile_pictures/"+value.map["user"]["profile_pic"]),
                                       fit: BoxFit.contain),
                                   border: Border.all(
                                       color: secondayBackgroundColor,
@@ -405,20 +417,56 @@ class _ProfileState extends State<Profile> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            const Icon(
-                              Icons.document_scanner,
-                              color: primaryBackgroundColor,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                "Privacy Policy",
-                                style: GoogleFonts.poppins(fontSize: 18.0),
+                        child: InkWell(
+                          onTap: _launchUrl,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.document_scanner,
+                                color: primaryBackgroundColor,
                               ),
-                            )
-                          ],
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  "Privacy Policy",
+                                  style: GoogleFonts.poppins(fontSize: 18.0),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 50.0,
+                      decoration: const BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                              color: primaryBackgroundColor, width: 2.0),
+                          bottom: BorderSide(
+                              color: primaryBackgroundColor, width: 2.0),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: InkWell(
+                          onTap: _launchUrl2,
+                          child: Row(
+                            children: [
+                              const Icon(
+                                Icons.document_scanner,
+                                color: primaryBackgroundColor,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  "Terms & Conditions",
+                                  style: GoogleFonts.poppins(fontSize: 18.0),
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     )

@@ -4,6 +4,7 @@ import 'package:omni_mobile_app/constants/color.dart';
 import 'package:omni_mobile_app/screens/about/components/about_header.dart';
 import 'package:omni_mobile_app/screens/category/components/loading/loading.dart';
 import 'package:omni_mobile_app/services/aboutus/aboutus_service.dart';
+import 'package:omni_mobile_app/static/ztradeAPI.dart';
 import 'package:provider/provider.dart';
 
 class About extends StatefulWidget {
@@ -24,30 +25,45 @@ class _AboutState extends State<About> {
     context.read<AboutUsService>().fetchAboutUs;
     return Consumer<AboutUsService>(
       builder: (context, value, child) {
-        return value.map.length ==0 && !value.error 
-        ?
-        Center(
-          child: CircularProgressIndicator(color: primaryBackgroundColor,),
-        )
-        :
-        value.error?
-        Center(
-          child: Text(value.errorMessage),
-        ):
-        Container(
-      height: MediaQuery.of(context).size.height,
-      child: Column(children: [
-        AboutUsHeader(),
-        Flexible(
-          child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: HtmlWidget(value.map["data"]["description"]),
-            ),
-          ),
-        )
-      ]),
-    );
+        return value.map.length == 0 && !value.error
+            ? Center(
+                child: CircularProgressIndicator(
+                  color: primaryBackgroundColor,
+                ),
+              )
+            : value.error
+                ? Center(
+                    child: Text(value.errorMessage),
+                  )
+                : Container(
+                    height: MediaQuery.of(context).size.height,
+                    child: Column(children: [
+                      AboutUsHeader(),
+                      Flexible(
+                        flex: 2,
+                        child: SingleChildScrollView(
+                          child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  HtmlWidget(value.map["data"]["description"]),
+                                  Container(
+                                    width: MediaQuery.of(context).size.width,
+                                    height: MediaQuery.of(context).size.height,
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: NetworkImage(
+                                                ZtradeAPI.baseUrl +
+                                                    "storage/aboutus_image/" +
+                                                    value.map["data"]["image"]),
+                                            fit: BoxFit.contain)),
+                                  ),
+                                ],
+                              )),
+                        ),
+                      ),
+                    ]),
+                  );
       },
     );
   }

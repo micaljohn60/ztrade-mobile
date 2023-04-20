@@ -48,7 +48,6 @@ class _FavouriteState extends State<Favourite> {
                     child: Scaffold(
                     body: Container(
                       child: Column(
-                        
                         children: [
                           FavouriteHeader(),
                           Container(
@@ -57,14 +56,25 @@ class _FavouriteState extends State<Favourite> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Image.asset(
-                              'assets/images/lover.png',
-                              height: 50,
-                              width: 50,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top:20.0),
-                              child: Text("You Haven't Add Favourite to the List"),
-                            )
+                                  'assets/images/lover.png',
+                                  height: 50,
+                                  width: 50,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 20.0),
+                                  child: Text(
+                                      "You Haven't Add Favourite to the List"),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 20.0),
+                                  child: TextButton(
+                                      child: Text("Refresh"),
+                                      onPressed: () {
+                                        context
+                                            .read<UserWishListService>()
+                                            .fetchWishListData(newValue);
+                                      }),
+                                )
                               ],
                             ),
                           )
@@ -76,22 +86,31 @@ class _FavouriteState extends State<Favourite> {
                     ? Center(
                         child: Text(value.errorMessage),
                       )
-                    : Container(
-                        color: primaryBackgroundColor,
-                        child: SafeArea(
-                          child: Scaffold(
-                            backgroundColor: secondayBackgroundColor,
-                            body: Container(
-                                height: MediaQuery.of(context).size.height,
-                                child: Column(
-                                  children: [
-                                    FavouriteHeader(),
-                                    Flexible(
-                                        child: FavouriteItems(
-                                      products: value.map,
-                                    )),
-                                  ],
-                                )),
+                    : RefreshIndicator(
+                        onRefresh: () async {
+                        
+                          await context
+                              .read<UserWishListService>()
+                              .fetchWishListData(newValue);
+                        },
+                        child: Container(
+                          color: primaryBackgroundColor,
+                          child: SafeArea(
+                            child: Scaffold(
+                              backgroundColor: secondayBackgroundColor,
+                              body: Container(
+                                  height: MediaQuery.of(context).size.height,
+                                  child: Column(
+                                    children: [
+                                      FavouriteHeader(),
+                                      Flexible(
+                                          child: FavouriteItems(
+                                        products: value.map,
+                                        userID: newValue,
+                                      )),
+                                    ],
+                                  )),
+                            ),
                           ),
                         ),
                       );

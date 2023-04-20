@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:flutter/cupertino.dart';
+import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:omni_mobile_app/abstract/disposable_provider.dart';
 import 'package:omni_mobile_app/api/api_error.dart';
@@ -100,52 +101,80 @@ class UserService extends DisposableProvider{
 }
 
 
-Future<ApiResponse> updateUser(String name, String factoryName,String id) async{
+Future<ApiResponse> updateUser(String name, String factoryName,String id,String profilePicture) async{
   ApiResponse _apiResponse = ApiResponse();
-
+  String _baseUrl=ZtradeAPI.baseUrl + "api/user/update/"+id;
+   Map<String, String> headers = {
+      'Content-Type': 'multipart/form-data',
+    };
+  print(name);
+  print(factoryName);
   try{
-    Response response;
-    ZtradeAPI.environment == "dev" ?
+    var url = Uri.parse(_baseUrl);
+    var req = http.MultipartRequest(
+      'post',url,  
+    )..headers.addAll(headers);
+    req.fields['name'] = name;
+    req.fields['factory_name'] = factoryName;
+    if(profilePicture == '-' || profilePicture == null){
+     
+      req.fields['profile_pic'] = "null"; 
+    }
+    else{
+      print(profilePicture);
+      req.files.add(
+    await http.MultipartFile.fromPath(
+      'profile_pic',
+      profilePicture
+    ));
+    }
 
-    response = await post(
-        Uri.http(ZtradeAPI.localEnvUrl, "api/user/update/"+id),
-        // headers: {
-        //   'Authorization': 'Bearer $token',
-        // }
-        body: {
-          'name' : name,
-          'factory_name' : factoryName
-        }
+    var response = await req.send();
 
-      )
-      :
-      response = await post(
-        Uri.parse(ZtradeAPI.baseUrl + 'api/user/update/'+id),
-        // headers: {
-        //   'Authorization': 'Bearer $token',
-        // }
-        body: {
-          'name' : name,
-          'factory_name' : factoryName
-        }
-      );
+    // Response response;
+    // ZtradeAPI.environment == "dev" ?
+
+    // response = await post(
+    //     Uri.http(ZtradeAPI.localEnvUrl, "api/user/update/"+id),
+    //     // headers: {
+    //     //   'Authorization': 'Bearer $token',
+    //     // }
+    //     body: {
+    //       'name' : name,
+    //       'factory_name' : factoryName
+    //     }
+
+    //   )
+    //   :
+    //   response = await post(
+    //     Uri.parse(ZtradeAPI.baseUrl + 'api/user/update/'+id),
+    //     // headers: {
+    //     //   'Authorization': 'Bearer $token',
+    //     // }
+    //     body: {
+    //       'name' : name,
+    //       'factory_name' : factoryName
+    //     }
+    //   );
 
       switch(response.statusCode){
         case 201:
         print(response.statusCode);
-        _apiResponse.data = User.fromJson(json.decode(response.body));
+        print(json.decode(await response.stream.bytesToString()));
+        // _apiResponse.data = User.fromJson(json.decode(await response.stream.bytesToString()));
         break;
         case 404:
          print(response.statusCode);
-        _apiResponse.ApiError = json.decode(response.body);
+        _apiResponse.ApiError = json.decode(await response.stream.bytesToString());
         break;
         case 401:    
-        _apiResponse.ApiError = json.decode(response.body);
+        _apiResponse.ApiError = json.decode(await response.stream.bytesToString());
         break;
         
         default:
          print(response.statusCode);
-        _apiResponse.ApiError = json.decode(response.body);
+         print(json.decode(json.encode(await response.stream.bytesToString())));
+        //_apiResponse.ApiError = json.decode(await response.stream.bytesToString());
         break;
       }
 

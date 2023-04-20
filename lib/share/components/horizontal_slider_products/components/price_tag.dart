@@ -11,8 +11,8 @@ class PriceTag extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Icon(UniconsLine.pricetag_alt,color: primaryBackgroundColor,size: 15.0,),
-        Text(price .replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')+ " MMK",style: GoogleFonts.poppins(fontSize: 13.0),)
+        Icon(UniconsLine.pricetag_alt,color: primaryBackgroundColor,size: 18.0,),
+        Text(price .replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},')+ " MMK",style: GoogleFonts.poppins(fontSize: 15.0),overflow: TextOverflow.fade,)
       ],
     );
   }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:omni_mobile_app/constants/color.dart';
 import 'package:omni_mobile_app/screens/category/components/loading/loading.dart';
 import 'package:omni_mobile_app/screens/product_detail/product_detail.dart';
 import 'package:omni_mobile_app/services/product/product.dart';
@@ -25,6 +26,13 @@ class HorizontalSliderProducts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
    
+    String calculatePrice(String price, int percentage){
+      
+       double data = int.parse(price) + (int.parse(price) * percentage / 100);
+       return data.toString();
+
+    }
+
     bool checkInWishList(List<dynamic> list, String productId){
       
       for(int i=0; i< list.length ; i++) {
@@ -64,7 +72,7 @@ class HorizontalSliderProducts extends StatelessWidget {
                     pushNewScreen(context,
                         screen: ProductDetail(
                           title: products[index]["name"],
-                          price: products[index]["price"],
+                          price: calculatePrice(products[index]["price"],products[index]["percentage"]["percentage"]),
                           itemDescription: products[index]["item_description"],
                           category: products[index]["category"]["name"],
                           images: products[index]["product_image"],
@@ -75,7 +83,7 @@ class HorizontalSliderProducts extends StatelessWidget {
                     width: 160,
                     decoration: BoxDecoration(
                         color: const Color.fromRGBO(255, 255, 255, 1),
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(7.0),
                         boxShadow: [
                           BoxShadow(
                               color: Colors.grey.withOpacity(0.2),
@@ -115,6 +123,8 @@ class HorizontalSliderProducts extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.poppins(
                                         fontSize: 16.0,
+                                        color: shadowColorLight,
+                                        fontWeight: FontWeight.w700
                                       )):
                                   Text(products[index]["name"],
                                       maxLines: 1,
@@ -128,7 +138,9 @@ class HorizontalSliderProducts extends StatelessWidget {
                           ),
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0, top: 5.0),
-                            child: PriceTag(price: products[index]["price"]),
+                            child: PriceTag(
+                              price: calculatePrice(products[index]["price"],products[index]["percentage"]["percentage"])
+                              ),
                           )
                         ],
                       ),
@@ -151,15 +163,12 @@ class ProductImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 2.0, right: 8.0, bottom: 2.0),
-      child: Container(
-        width: isFav ? 120 : 150,
-        height: isFav ? 120 : 150,
-        decoration: BoxDecoration(
-            image: DecorationImage(
-                image: NetworkImage(imgUrl), fit: BoxFit.cover)),
-      ),
+    return Container(
+      width: isFav ? 120 : 160,
+      height: isFav ? 120 : 160,
+      decoration: BoxDecoration(
+          image: DecorationImage(
+              image: NetworkImage(imgUrl), fit: BoxFit.contain)),
     );
   }
 }

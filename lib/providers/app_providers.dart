@@ -3,6 +3,7 @@ import 'package:omni_mobile_app/abstract/disposable_provider.dart';
 import 'package:omni_mobile_app/services/category/category.dart';
 import 'package:omni_mobile_app/services/category/category_with_product.dart';
 import 'package:omni_mobile_app/services/index/index_service.dart';
+import 'package:omni_mobile_app/services/search/search_service.dart';
 import 'package:provider/provider.dart';
 
 class AppProviders{
@@ -23,6 +24,13 @@ class AppProviders{
     ];
   }
 
+  static List<DisposableProvider> searchProvider(BuildContext context){
+    return [
+      Provider.of<SearchService>(context, listen:false),
+     
+    ];
+  }
+
     static List<DisposableProvider> getIndex(BuildContext context) {
     return [
       
@@ -34,6 +42,12 @@ class AppProviders{
 
   static void disposeCategoryWithProductProvider(BuildContext context) {
     getCategoryWithProductProvider(context).forEach((disposableProvider) {
+      disposableProvider.disposeValue();
+    });
+  }
+
+  static void disposeSearch(BuildContext context) {
+    searchProvider(context).forEach((disposableProvider) {
       disposableProvider.disposeValue();
     });
   }
