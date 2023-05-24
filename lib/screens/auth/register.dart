@@ -26,29 +26,31 @@ class _RegisterState extends State<Register> {
   String reTypePassword;
   String factoryName;
   bool isLoading = true;
+  final TextEditingController _pass = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  
+
   void _handleSubmit() async {
     final FormState form = _formKey.currentState;
     if (!form.validate()) {
       ScaffoldMessenger.of(context)
           .showSnackBar(snackBar("Please Fix Error First"));
     } else {
-      setState(() {
-        isLoading = true;
-      });
-      form.save();
-      _apiResponse = await registerUser(name, email, factoryName, password);
-    }
-    if (_apiResponse.apiError == null) {
-         Navigator.of(context).pushReplacement(
-           MaterialPageRoute(builder: (context) => Message()
-           )
-         );
-    } else {
-      setState(() {
-        isLoading = false;
-      });
+    
+        setState(() {
+          isLoading = true;
+        });
+        form.save();
+        _apiResponse = await registerUser(name, email, factoryName, password);
+
+        if (_apiResponse.apiError == null) {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => Message()));
+        } else {
+          setState(() {
+            isLoading = false;
+          });
+        }
+      
     }
   }
 
@@ -59,13 +61,13 @@ class _RegisterState extends State<Register> {
       child: SafeArea(
           child: Scaffold(
               body: SingleChildScrollView(
-                child: Form(
-                      key: _formKey,
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Row(
+        child: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Padding(
@@ -79,8 +81,8 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                 ],
-                          ),
-                          Padding(
+              ),
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   onSaved: (value) => name = value,
@@ -91,8 +93,8 @@ class _RegisterState extends State<Register> {
                   validator: (value) =>
                       value.isEmpty ? 'Please fill this form' : null,
                 ),
-                          ),
-                          Padding(
+              ),
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   onSaved: (value) => email = value,
@@ -102,29 +104,31 @@ class _RegisterState extends State<Register> {
                   validator: (value) =>
                       value.isEmpty ? 'Please fill this form' : null,
                 ),
-                          ),
-                          Padding(
+              ),
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   onSaved: (value) => factoryName = value,
                   decoration: InputDecoration(
                       label: Text("Factory Name"),
                       hintText: 'Enter Factory Name'),
+                      
                   validator: (value) =>
                       value.isEmpty ? 'Please fill this form' : null,
                 ),
-                          ),
-                          Padding(
+              ),
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
+                  controller: _pass,
                   onSaved: (value) => password = value,
                   decoration: InputDecoration(
                       label: Text("Password"), hintText: 'Enter your password'),
                   validator: (value) =>
                       value.isEmpty ? 'Please fill this form' : null,
                 ),
-                          ),
-                          Padding(
+              ),
+              Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   onSaved: (value) => reTypePassword = value,
@@ -132,10 +136,12 @@ class _RegisterState extends State<Register> {
                       label: Text("Confirm Password"),
                       hintText: 'Re-type to Confirm password'),
                   validator: (value) =>
-                      value.isEmpty ? 'Please fill this form' : null,
+                      value.isEmpty ? 'Please fill this form' : 
+                      value != _pass.text ? 'Password Dont Match' : null
+                      ,
                 ),
-                          ),
-                          Padding(
+              ),
+              Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: ElevatedButton(
                   onPressed: () {
@@ -167,8 +173,8 @@ class _RegisterState extends State<Register> {
                     padding: EdgeInsets.symmetric(horizontal: 90, vertical: 5),
                   ),
                 ),
-                          ),
-                          Row(
+              ),
+              Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Padding(
@@ -181,11 +187,11 @@ class _RegisterState extends State<Register> {
                       },
                       child: const Text("Login"))
                 ],
-                          ),
-                        ],
-                      ),
-                    ),
-              ))),
+              ),
+            ],
+          ),
+        ),
+      ))),
     );
   }
 }
