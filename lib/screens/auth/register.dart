@@ -46,6 +46,9 @@ class _RegisterState extends State<Register> {
           Navigator.of(context).pushReplacement(
               MaterialPageRoute(builder: (context) => Message()));
         } else {
+          Map error = _apiResponse.apiError as Map;
+          ScaffoldMessenger.of(context)
+          .showSnackBar(snackBar(error["message"]));
           setState(() {
             isLoading = false;
           });

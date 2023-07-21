@@ -1,4 +1,4 @@
-package com.example.omni_mobile_app
+package com.zdotcom.ztrade
 
 import io.flutter.embedding.android.FlutterActivity
 

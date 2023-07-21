@@ -44,18 +44,22 @@ Future<ApiResponse> registerUser(String userName, String email, String factoryNa
       switch(response.statusCode){
         
         case 201:
-       
+        print("201");
         _apiResponse.data = User.fromJson(json.decode(response.body));
         break;
+        case 422:
+        print("422");
+        break;
         case 404:
-         
-        _apiResponse.data = User.fromJson(json.decode(response.body));
+         print("404");
+        _apiResponse.ApiError =  json.decode(response.body);
         break;
         
         default:
+        print("default");
         print(response.statusCode);
         print(response.body);
-        _apiResponse.ApiError = json.decode(response.body);
+         _apiResponse.ApiError = json.decode(response.body);
         break;
       }
 
