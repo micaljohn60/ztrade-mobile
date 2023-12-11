@@ -35,7 +35,7 @@ class LatestProducts extends StatelessWidget {
     return GridView.count(
       physics: NeverScrollableScrollPhysics(),
       crossAxisCount: size.width > 600 ? 3 : 2,
-      childAspectRatio: size.width > 600 ? 0.9 : 0.65,
+      childAspectRatio: size.width > 600 ? 1.2 : 0.65,
       shrinkWrap: true,
       children: products
               .map<Widget>((e) => listItem(

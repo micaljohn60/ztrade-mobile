@@ -89,7 +89,7 @@ class _CategoryItemsState extends State<CategoryItems> {
                         GridView.count(
                             physics: NeverScrollableScrollPhysics(),
                             crossAxisCount: size.width > 600 ? 4 : 3,
-                            childAspectRatio: size.width > 600 ? 1 : 0.9,
+                            childAspectRatio: size.width > 600 ? 2 : 0.9,
                             shrinkWrap: true,
                             children: !widget.isHomePage
                                 ? 

@@ -52,7 +52,7 @@ class ProductService with ChangeNotifier{
           _errorMessage = e.toString();
           _map = [];
           _isSocket = false;
-          notifyListeners();
+        notifyListeners();
         }
         notifyListeners();
       } else if (response.statusCode == 404) {
