@@ -20,31 +20,21 @@ class HorizontalSliderProducts extends StatelessWidget {
       {Key key, this.title, this.products, this.userId, this.wishLists})
       : super(key: key);
 
-
-   
-
   @override
   Widget build(BuildContext context) {
-   
-    String calculatePrice(String price, int percentage){
-      
-       double data = int.parse(price) + (int.parse(price) * percentage / 100);
-       return data.toString();
-
+    String calculatePrice(String price, int percentage) {
+      double data = int.parse(price) + (int.parse(price) * percentage / 100);
+      return data.toString();
     }
 
-    bool checkInWishList(List<dynamic> list, String productId){
-      
-      for(int i=0; i< list.length ; i++) {
-        
+    bool checkInWishList(List<dynamic> list, String productId) {
+      for (int i = 0; i < list.length; i++) {
         if (list[i]["product_id"].toString() == productId) {
-          
           return true;
-        } 
+        }
       }
-      return false;      
+      return false;
     }
-   
 
     var size = MediaQuery.of(context).size;
     return SizedBox(
@@ -69,15 +59,21 @@ class HorizontalSliderProducts extends StatelessWidget {
                 padding: const EdgeInsets.all(6.0),
                 child: InkWell(
                   onTap: () {
-                    pushNewScreen(context,
-                        screen: ProductDetail(
-                          title: products[index]["name"],
-                          price: calculatePrice(products[index]["price"],products[index]["percentage"]["percentage"]),
-                          itemDescription: products[index]["item_description"],
-                          category: products[index]["category"]["name"],
-                          images: products[index]["product_image"],
-                          favItems: wishLists,
-                        ));
+                    pushNewScreen(
+                      context,
+                      screen: ProductDetail(
+                        id: products[index]["id"],
+                        title: products[index]["name"],
+                        price: calculatePrice(products[index]["price"],
+                            products[index]["percentage"]["percentage"]),
+                        itemDescription: products[index]["item_description"],
+                        category: products[index]["category"]["name"],
+                        images: products[index]["product_image"],
+                        favItems: wishLists,
+                      ),
+                    );
+                    print(
+                        "this is product id =======>${products[index]["id"]}");
                   },
                   child: Container(
                     width: 160,
@@ -101,7 +97,8 @@ class HorizontalSliderProducts extends StatelessWidget {
                                 userId: userId,
                                 productId: products[index]["id"].toString(),
                                 wishLists: wishLists,
-                                isWishList: checkInWishList(wishLists, products[index]["id"].toString()),
+                                isWishList: checkInWishList(wishLists,
+                                    products[index]["id"].toString()),
                               )),
                           ProductImage(
                             imgUrl: ZtradeAPI.productImageUrl +
@@ -116,22 +113,21 @@ class HorizontalSliderProducts extends StatelessWidget {
                               Flexible(
                                 child: Padding(
                                   padding: const EdgeInsets.only(left: 8.0),
-                                  child: checkInWishList(wishLists, products[index]["id"].toString()) ?
-
-                                  Text(products[index]["name"],
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 16.0,
-                                        color: shadowColorLight,
-                                        fontWeight: FontWeight.w700
-                                      )):
-                                  Text(products[index]["name"],
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 16.0,
-                                      )),
+                                  child: checkInWishList(wishLists,
+                                          products[index]["id"].toString())
+                                      ? Text(products[index]["name"],
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.poppins(
+                                              fontSize: 16.0,
+                                              color: shadowColorLight,
+                                              fontWeight: FontWeight.w700))
+                                      : Text(products[index]["name"],
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: GoogleFonts.poppins(
+                                            fontSize: 16.0,
+                                          )),
                                 ),
                               ),
                             ],
@@ -139,8 +135,10 @@ class HorizontalSliderProducts extends StatelessWidget {
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0, top: 5.0),
                             child: PriceTag(
-                              price: calculatePrice(products[index]["price"],products[index]["percentage"]["percentage"])
-                              ),
+                                price: calculatePrice(
+                                    products[index]["price"],
+                                    products[index]["percentage"]
+                                        ["percentage"])),
                           )
                         ],
                       ),

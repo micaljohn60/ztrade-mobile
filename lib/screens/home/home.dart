@@ -15,6 +15,8 @@ import 'package:omni_mobile_app/share/components/topbar.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../providers/add_to_cart/add_to_cart_provider.dart';
+
 class Home extends StatefulWidget {
   String token;
   Home({Key key, this.token}) : super(key: key);
@@ -27,18 +29,22 @@ class _HomeState extends State<Home> {
   CustomSecureStorage css = CustomSecureStorage();
   String newValue = "n";
   bool isLoading = true;
+  String token = "";
   Future<void> readToken() async {
     final String value = await css.readValueName("session_id");
+    final String _token = await css.readValue();
+
     setState(() {
       newValue = value;
       isLoading = false;
+      token = _token;
     });
+    final provider = Provider.of<AddToCartNotifier>(context, listen: false);
+    provider.getCartsFromAPI(token);
   }
 
   @override
   void initState() {
-    // TODO: implement initState
-
     readToken();
     super.initState();
   }
@@ -56,6 +62,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    // final instance = Provider.of<CartLengthNotifier>(context);
+    //
+    // print("this is from home==> $token  ${instance.getLength()}");
     widget.token == null
         ? context.read<IndexService>().fetchData
         : context.read<IndexServiceAuth>().fetchData(newValue);
@@ -77,11 +86,11 @@ class _HomeState extends State<Home> {
                               onPressed: () {
                                 context.read<IndexService>().fetchData;
                               },
-                              child: Text("Refresh"))
+                              child: const Text("Refresh"))
                         ],
                       )
                     : Scaffold(
-                      floatingActionButton: FloatingActionButton(
+                        floatingActionButton: FloatingActionButton(
                           onPressed: () => showDialog<String>(
                             context: context,
                             builder: (BuildContext context) => Dialog(
@@ -90,17 +99,17 @@ class _HomeState extends State<Home> {
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: value.map["siteSetting"][0]["phonenumber"]
-                                        .split(",")
-                                        .map<Widget>((e) => TextButton(
-                                              onPressed: () async {
-                                                await launchUrl(Uri.parse(
-                                                    "tel://" +
-                                                      e));
-                                              },
-                                              child: Text(
-                                                  e),
-                                            )).toList(),
+                                  children:
+                                      value.map["siteSetting"][0]["phonenumber"]
+                                          .split(",")
+                                          .map<Widget>((e) => TextButton(
+                                                onPressed: () async {
+                                                  await launchUrl(
+                                                      Uri.parse("tel://" + e));
+                                                },
+                                                child: Text(e),
+                                              ))
+                                          .toList(),
                                 ),
                               ),
                             ),
@@ -123,7 +132,7 @@ class _HomeState extends State<Home> {
                               },
                               child: Column(
                                 children: [
-                                  TopBar(),
+                                  const TopBar(),
                                   ImageSlider(images: value.map["sliders"]),
                                   CategoryItems(
                                       isHomePage: false,
@@ -206,7 +215,7 @@ class _HomeState extends State<Home> {
                                     .read<IndexServiceAuth>()
                                     .fetchData(newValue);
                               },
-                              child: Text("Refresh"))
+                              child: const Text("Refresh"))
                         ],
                       )
                     : Scaffold(
@@ -219,17 +228,17 @@ class _HomeState extends State<Home> {
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  children: value.map["siteSetting"][0]["phonenumber"]
-                                        .split(",")
-                                        .map<Widget>((e) => TextButton(
-                                              onPressed: () async {
-                                                await launchUrl(Uri.parse(
-                                                    "tel://" +
-                                                      e));
-                                              },
-                                              child: Text(
-                                                  e),
-                                            )).toList(),
+                                  children:
+                                      value.map["siteSetting"][0]["phonenumber"]
+                                          .split(",")
+                                          .map<Widget>((e) => TextButton(
+                                                onPressed: () async {
+                                                  await launchUrl(
+                                                      Uri.parse("tel://" + e));
+                                                },
+                                                child: Text(e),
+                                              ))
+                                          .toList(),
                                 ),
                               ),
                             ),
@@ -250,7 +259,7 @@ class _HomeState extends State<Home> {
                             child: SingleChildScrollView(
                               child: Column(
                                 children: [
-                                  TopBar(),
+                                  const TopBar(),
                                   ImageSlider(images: value.map["sliders"]),
                                   CategoryItems(
                                     isHomePage: false,

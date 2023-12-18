@@ -13,10 +13,12 @@ import '../../static/ztradeAPI.dart';
 import '../product_detail/product_detail.dart';
 
 class CategoryDetail extends StatefulWidget {
+  int id;
   String title;
   String categoryId;
   List<dynamic> wishLists;
-  CategoryDetail({Key key, this.title, this.categoryId, this.wishLists})
+  CategoryDetail(
+      {Key key, this.id, this.title, this.categoryId, this.wishLists})
       : super(key: key);
 
   @override
@@ -24,23 +26,19 @@ class CategoryDetail extends StatefulWidget {
 }
 
 class _CategoryDetailState extends State<CategoryDetail> {
-  String calculatePrice(String price, int percentage){
-
-          if(percentage > 0){
-          double data = int.parse(price) + (int.parse(price) * percentage / 100);
-          return data.toString();
-          }
-          else{
-          double data = int.parse(price) - (int.parse(price) * percentage / 100);
-          return data.toString();
-          }
-
-        }
+  String calculatePrice(String price, int percentage) {
+    if (percentage > 0) {
+      double data = int.parse(price) + (int.parse(price) * percentage / 100);
+      return data.toString();
+    } else {
+      double data = int.parse(price) - (int.parse(price) * percentage / 100);
+      return data.toString();
+    }
+  }
 
   String _chosenValue = "1";
   @override
   Widget build(BuildContext context) {
-    
     var size = MediaQuery.of(context).size;
 
     context.read<CategoryWithProduct>().fetchData(widget.categoryId, "1");
@@ -54,7 +52,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
           body: Consumer<CategoryWithProduct>(
             builder: ((context, value, child) {
               return value.map.length == 0 && !value.error
-                  ? Center(
+                  ? const Center(
                       child: Text("Loading"),
                     )
                   : value.error
@@ -67,7 +65,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                TopBar(),
+                                const TopBar(),
                                 value.map["data"].length == 0
                                     ? NoItem(
                                         errorText:
@@ -88,16 +86,17 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                       ),
                                 DecoratedBox(
                                   decoration: BoxDecoration(
-                                      color: Colors
-                                          .white, //background color of dropdown button
-                                      border: Border.all(
-                                          color: primaryBackgroundColor,
-                                          width: 1), //border of dropdown button
-                                      borderRadius: BorderRadius.circular(
-                                          10), //border raiuds of dropdown button
-                                      ),
+                                    color: Colors
+                                        .white, //background color of dropdown button
+                                    border: Border.all(
+                                        color: primaryBackgroundColor,
+                                        width: 1), //border of dropdown button
+                                    borderRadius: BorderRadius.circular(
+                                        10), //border raiuds of dropdown button
+                                  ),
                                   child: Padding(
-                                    padding: const EdgeInsets.only(left:10, right:10),
+                                    padding: const EdgeInsets.only(
+                                        left: 10, right: 10),
                                     child: DropdownButton(
                                       items: List<int>.generate(
                                               value.map["last_page"],
@@ -108,7 +107,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                           value: value.toString(),
                                           child: Text(
                                             value.toString(),
-                                            style: TextStyle(color: Colors.black),
+                                            style: const TextStyle(
+                                                color: Colors.black),
                                           ),
                                         );
                                       }).toList(),
@@ -128,7 +128,8 @@ class _CategoryDetailState extends State<CategoryDetail> {
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: GridView.count(
-                                      physics: NeverScrollableScrollPhysics(),
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
                                       crossAxisCount: size.width > 600 ? 3 : 2,
                                       childAspectRatio:
                                           size.width > 600 ? 0.9 : 0.7,
@@ -158,14 +159,17 @@ class _CategoryDetailState extends State<CategoryDetail> {
             pushNewScreen(
               context,
               screen: ProductDetail(
+                id: e['id'],
                 title: e["name"],
                 itemDescription: e["item_description"],
                 category: "No Data in API",
                 images: e["product_image"],
-                price: calculatePrice(e["price"],e["percentage"]["percentage"]),
+                price:
+                    calculatePrice(e["price"], e["percentage"]["percentage"]),
                 favItems: widget.wishLists ?? [],
               ),
             );
+            print('this is product id==>${e['id']}');
           },
           child: Container(
             decoration: BoxDecoration(boxShadow: [
@@ -193,24 +197,26 @@ class _CategoryDetailState extends State<CategoryDetail> {
                   ),
                 ),
                 Flexible(
-
                     child: Padding(
-                      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: Text(
-                  e["name"] + " " +e["item_description"],
-                  style: GoogleFonts.poppins(fontSize:15.0, color: shadowColorLight,fontWeight: FontWeight.w500 ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                    )),
-
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                  child: Text(
+                    e["name"] + " " + e["item_description"],
+                    style: GoogleFonts.poppins(
+                        fontSize: 15.0,
+                        color: shadowColorLight,
+                        fontWeight: FontWeight.w500),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                )),
                 Flexible(
-
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: PriceTag(price: calculatePrice(e["price"],e["percentage"]["percentage"]) ,),
-                    )
-                    )
+                  padding: const EdgeInsets.all(8.0),
+                  child: PriceTag(
+                    price: calculatePrice(
+                        e["price"], e["percentage"]["percentage"]),
+                  ),
+                ))
               ],
             ),
           ),

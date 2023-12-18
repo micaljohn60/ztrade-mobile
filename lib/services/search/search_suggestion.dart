@@ -8,17 +8,17 @@ import 'package:omni_mobile_app/api/api_response.dart';
 
 import '../../static/ztradeAPI.dart';
 
-class SearchSuggestionService extends DisposableProvider{
+class SearchSuggestionService extends DisposableProvider {
   SearchSuggestionService();
 
-  Map<dynamic,dynamic> _map = {};
+  Map<dynamic, dynamic> _map = {};
   List<String> _stringData = [];
   List<dynamic> _reverseMap = [];
   bool _error = false;
   String _errorMessage = '';
   String key;
   bool _isSocket = false;
-  Map<dynamic,dynamic> get map => _map;
+  Map<dynamic, dynamic> get map => _map;
   List<dynamic> get reverseMap => _reverseMap;
   List<String> get stringData => _stringData;
   bool get error => _error;
@@ -28,22 +28,22 @@ class SearchSuggestionService extends DisposableProvider{
   Future<void> fetchData(String data) async {
     Response response;
     try {
-      
-      ZtradeAPI.environment == "dev" 
-      ?
-      response = await get(
-        Uri.http(ZtradeAPI.localEnvUrl, "nonrole/search/suggestions/user/"+data),
-        // headers: {
-        //   'Authorization': 'Bearer $token',
-        // }
-      )
-      : 
-      response = await get(
-        Uri.parse(ZtradeAPI.baseUrl + "nonrole/search/suggestions/user/"+data),
-        // headers: {
-        //   'Authorization': 'Bearer $token',
-        // }
-      );
+      ZtradeAPI.environment == "dev"
+          ? response = await get(
+              Uri.http(ZtradeAPI.localEnvUrl,
+                  "nonrole/search/suggestions/user/" + data),
+              // headers: {
+              //   'Authorization': 'Bearer $token',
+              // }
+            )
+          : response = await get(
+              Uri.parse(ZtradeAPI.baseUrl +
+                  "nonrole/search/suggestions/user/" +
+                  data),
+              // headers: {
+              //   'Authorization': 'Bearer $token',
+              // }
+            );
 
       if (response.statusCode == 200) {
         try {
@@ -66,15 +66,13 @@ class SearchSuggestionService extends DisposableProvider{
         _errorMessage = 'No Product Found! ';
         _map = {};
         notifyListeners();
-      } 
-      else if(response.statusCode == 403){
+      } else if (response.statusCode == 403) {
         notifyListeners();
         _error = true;
         _isSocket = false;
         _errorMessage = 'Permission Denied';
         _map = {};
-      }
-      else {
+      } else {
         notifyListeners();
         _error = true;
         _isSocket = false;
@@ -90,66 +88,54 @@ class SearchSuggestionService extends DisposableProvider{
     }
   }
 
-  
-
   @override
   void disposeValue() {
     _map = {};
   }
-
-  
 }
 
 Future<ApiResponse> addSearchSuggestion(String id, String data) async {
-    ApiResponse _apiResponse = ApiResponse();
+  ApiResponse _apiResponse = ApiResponse();
 
-  try{
+  try {
     Response response;
-    ZtradeAPI.environment == "dev" ?
+    ZtradeAPI.environment == "dev"
+        ? response = await post(
+            Uri.http(ZtradeAPI.localEnvUrl,
+                "nonrole/searchsuggestion/usersearch/" + id + "/" + data),
+            // headers: {
+            //   'Authorization': 'Bearer $token',
+            // }
+            body: {
+                'user_id': id,
+                'search_data': data,
+              })
+        : response = await post(
+            Uri.parse(ZtradeAPI.baseUrl + 'nonrole/search/addsearchlist'),
+            headers: {
+                'accept': 'application/json'
+              },
+            body: {
+                'user_id': id,
+                'search_data': data,
+              });
 
-    response = await post(
-        Uri.http(ZtradeAPI.localEnvUrl, "nonrole/searchsuggestion/usersearch/"+id+"/"+data),
-        // headers: {
-        //   'Authorization': 'Bearer $token',
-        // }
-        body: {
-          'user_id' : id,
-          'search_data' : data,
-        }
-
-      )
-      :
-      response = await post(
-        Uri.parse(ZtradeAPI.baseUrl + 'nonrole/search/addsearchlist'),
-        headers: {
-          'accept' : 'application/json'
-        },
-        body: {
-          'user_id' : id,
-          'search_data' : data,
-
-        }
-      );
-      
-      switch(response.statusCode){
-        
-        case 200:
+    switch (response.statusCode) {
+      case 200:
         // print("hello");
         break;
-        case 404:         
+      case 404:
         // print("not fount");
         break;
-        
-        default:
+
+      default:
         // print(response.statusCode);
         // print(response.body);
         _apiResponse.ApiError = json.decode(response.body);
         break;
-      }
-
-  }
-  on SocketException{
+    }
+  } on SocketException {
     _apiResponse.ApiError = {"error": "Server error. Please retry"};
   }
   return _apiResponse;
-  }
+}

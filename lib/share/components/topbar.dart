@@ -1,11 +1,16 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
-import 'package:omni_mobile_app/api/api_response.dart';
+import 'package:badges/badges.dart' as badges;
 import 'package:omni_mobile_app/constants/color.dart';
+import 'package:omni_mobile_app/model/vo/cart_length_vo/cart_length.dart';
+import 'package:omni_mobile_app/providers/add_to_cart/add_to_cart_provider.dart';
 import 'package:omni_mobile_app/providers/app_providers.dart';
+import 'package:omni_mobile_app/screens/cart/cart_screen.dart';
 import 'package:omni_mobile_app/screens/profile/profile.dart';
 import 'package:omni_mobile_app/screens/search/search.dart';
 import 'package:omni_mobile_app/services/search/search_suggestion.dart';
 import 'package:omni_mobile_app/services/secure_storage/custom_secure_storage.dart';
+import 'package:omni_mobile_app/share/app_style.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
 import 'package:unicons/unicons.dart';
@@ -18,22 +23,24 @@ class TopBar extends StatefulWidget {
 }
 
 class _TopBarState extends State<TopBar> {
-  ApiResponse _apiResponse = ApiResponse();
   CustomSecureStorage css = CustomSecureStorage();
   String newValue = "n";
+  String token = "";
 
   Future<void> readToken() async {
     final String value = await css.readValueName("session_id");
+    final String userToken = await css.readValue();
     setState(() {
       newValue = value;
+      token = userToken;
     });
+    context.read<AddToCartNotifier>().getCartsFromAPI(token);
   }
 
   @override
   void initState() {
-    // TODO: implement initState
-
     readToken();
+
     super.initState();
   }
 
@@ -41,23 +48,24 @@ class _TopBarState extends State<TopBar> {
   @override
   Widget build(BuildContext context) {
     context.read<SearchSuggestionService>().fetchData(newValue);
-    var size = MediaQuery.of(context).size;
+    // var size = MediaQuery.of(context).size;
     return Container(
-      decoration: BoxDecoration(color: primaryBackgroundColor),
+      decoration: const BoxDecoration(color: primaryBackgroundColor),
       height: 80.0,
       width: MediaQuery.of(context).size.width,
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           Consumer<SearchSuggestionService>(
             builder: ((context, value, child) {
               return value.map.length == 0 && !value.error
-                  ? Text("")
+                  ? const Text("")
                   : value.error
                       ? Text(value.errorMessage)
                       : SizedBox(
                           height: 65.0,
-                          width: size.width / 1.2,
+                          width: MediaQuery.of(context).size.width * 0.7,
                           child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: RawAutocomplete(
@@ -81,12 +89,12 @@ class _TopBarState extends State<TopBar> {
                                     FocusNode focusNode,
                                     VoidCallback onFieldSubmitted) {
                                   return TextField(
-                                    
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         color: secondayBackgroundColor),
-                                    onChanged: (value){AppProviders.disposeSearch(context);},
+                                    onChanged: (value) {
+                                      AppProviders.disposeSearch(context);
+                                    },
                                     onSubmitted: (value) async {
-                                      
                                       pushNewScreen(
                                         context,
                                         screen: Search(
@@ -95,13 +103,13 @@ class _TopBarState extends State<TopBar> {
                                         ),
                                         withNavBar: true,
                                       );
-                                      
                                     },
                                     decoration: InputDecoration(
-                                        prefixIcon: Icon(UniconsLine.search,
+                                        prefixIcon: const Icon(
+                                            UniconsLine.search,
                                             color: secondayBackgroundColor),
                                         labelText: "Search",
-                                        labelStyle: TextStyle(
+                                        labelStyle: const TextStyle(
                                             color: secondayBackgroundColor),
                                         enabledBorder: OutlineInputBorder(
                                             borderSide: const BorderSide(
@@ -133,13 +141,15 @@ class _TopBarState extends State<TopBar> {
                                                     onSelected(opt);
                                                   },
                                                   child: Container(
-                                                      padding: EdgeInsets.only(
-                                                          right: 60),
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 60),
                                                       child: Card(
                                                           child: Container(
                                                         width: double.infinity,
                                                         padding:
-                                                            EdgeInsets.all(10),
+                                                            const EdgeInsets
+                                                                .all(10),
                                                         child: Text(opt),
                                                       ))));
                                             }).toList(),
@@ -149,48 +159,50 @@ class _TopBarState extends State<TopBar> {
                         );
             }),
           ),
-
-          //       SizedBox(
-          //         height: 65.0,
-          //         width: size.width / 1.2,
-          //         child: Padding(
-          //           padding: const EdgeInsets.all(8.0),
-          //           child: TextField(
-          //             onSubmitted: (value) {
-          //               pushNewScreen(
-          //                 context,
-          //                 screen: Search(text: value,),
-          //                 withNavBar: true,
-          // );
-          //             },
-          //             decoration: InputDecoration(
-          //               prefixIcon: Icon(UniconsLine.search,color: secondayBackgroundColor),
-          //               labelText: "Search",
-          //               labelStyle: TextStyle(color: secondayBackgroundColor),
-          //               enabledBorder: OutlineInputBorder(
-          //                 borderSide: const  BorderSide(width: 2, color: secondayBackgroundColor),
-          //                 borderRadius: BorderRadius.circular(15)
-          //               ),
-          //               focusedBorder: OutlineInputBorder(
-          //                 borderSide: const  BorderSide(width: 2, color: secondayBackgroundColor),
-          //                 borderRadius: BorderRadius.circular(15)
-          //               )
-          //             ),
-          //           ),
-          //         ),
-          //       ),
           IconButton(
-              onPressed: () => {
-                    pushNewScreen(
-                      context,
-                      screen: Profile(token: newValue),
-                    )
-                  },
-              icon: Icon(
-                UniconsLine.user,
-                size: 30.0,
-                color: secondayBackgroundColor,
-              ))
+            onPressed: () => {
+              pushNewScreen(
+                context,
+                screen: Profile(token: newValue),
+              ),
+            },
+            icon: const Icon(
+              UniconsLine.user,
+              size: 30.0,
+              color: secondayBackgroundColor,
+            ),
+          ),
+          Consumer<AddToCartNotifier>(builder: (_, notifier, __) {
+            return Badge(
+              toAnimate: true,
+              showBadge: notifier.cartDataList.isNotEmpty,
+              badgeColor: Colors.redAccent,
+              elevation: 0,
+              ignorePointer: false,
+              badgeContent: Text(
+                notifier.cartDataList.length.toString(),
+                style: appStyle(12, FontWeight.w300, Colors.white),
+              ),
+              animationType: BadgeAnimationType.fade,
+              padding: const EdgeInsets.all(10),
+              child: IconButton(
+                onPressed: () => {
+                  pushNewScreen(
+                    context,
+                    screen: CartScreen(),
+                  )
+                },
+                icon: const Icon(
+                  UniconsLine.shopping_cart,
+                  size: 30.0,
+                  color: secondayBackgroundColor,
+                ),
+              ),
+            );
+          }),
+          const SizedBox(
+            width: 10,
+          ),
         ],
       ),
     );

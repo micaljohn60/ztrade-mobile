@@ -13,20 +13,17 @@ import '../product_detail/product_detail.dart';
 class StoreDetail extends StatelessWidget {
   String title;
   String storeId;
-  StoreDetail({Key key, this.title,this.storeId}) : super(key: key);
+  StoreDetail({Key key, this.title, this.storeId}) : super(key: key);
 
-  String calculatePrice(String price, int percentage){
-
-          if(percentage > 0){
-          double data = int.parse(price) + (int.parse(price) * percentage / 100);
-          return data.toString();
-          }
-          else{
-          double data = int.parse(price) - (int.parse(price) * percentage / 100);
-          return data.toString();
-          }
-
-        }
+  String calculatePrice(String price, int percentage) {
+    if (percentage > 0) {
+      double data = int.parse(price) + (int.parse(price) * percentage / 100);
+      return data.toString();
+    } else {
+      double data = int.parse(price) - (int.parse(price) * percentage / 100);
+      return data.toString();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +34,9 @@ class StoreDetail extends StatelessWidget {
       builder: ((context, value, child) {
         return value.map.length == 0 && !value.error
             ? Center(
-                child: Loading(height: 150,),
+                child: Loading(
+                  height: 150,
+                ),
               )
             : value.error
                 ? Center(
@@ -49,9 +48,7 @@ class StoreDetail extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-
                           TopBar(),
-
                           Padding(
                             padding: const EdgeInsets.only(
                                 left: 8.0, right: 8.0, bottom: 8.0, top: 15.0),
@@ -84,9 +81,15 @@ class StoreDetail extends StatelessWidget {
         child: InkWell(
           onTap: () {
             pushNewScreen(
-                context,
-                screen: ProductDetail(title: e["name"],itemDescription: e["item_description"],category: "No Data in API",images: e["product_image"],price: e["price"],),
-
+              context,
+              screen: ProductDetail(
+                id: e["id"],
+                title: e["name"],
+                itemDescription: e["item_description"],
+                category: "No Data in API",
+                images: e["product_image"],
+                price: e["price"],
+              ),
             );
           },
           child: Container(
@@ -106,25 +109,29 @@ class StoreDetail extends StatelessWidget {
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10.0),
                         image: DecorationImage(
-                            image: NetworkImage(
-                                ZtradeAPI.productImageUrl+e["product_image"][0]["thumbnails"].replaceAll('"',"")),
+                            image: NetworkImage(ZtradeAPI.productImageUrl +
+                                e["product_image"][0]["thumbnails"]
+                                    .replaceAll('"', "")),
                             fit: BoxFit.contain)),
                     height: 140.0,
                     width: 120,
                   ),
                 ),
-                Text( e["name"] + " " +e["item_description"],
-                style: GoogleFonts.poppins(fontSize:15.0, color: shadowColorLight,fontWeight: FontWeight.w500 ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis),
-                  Flexible(
-
+                Text(e["name"] + " " + e["item_description"],
+                    style: GoogleFonts.poppins(
+                        fontSize: 15.0,
+                        color: shadowColorLight,
+                        fontWeight: FontWeight.w500),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis),
+                Flexible(
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: PriceTag(price: calculatePrice(e["price"],e["percentage"]["percentage"]) ,),
-                    )
-                    )
-              
+                  padding: const EdgeInsets.all(8.0),
+                  child: PriceTag(
+                    price: calculatePrice(
+                        e["price"], e["percentage"]["percentage"]),
+                  ),
+                ))
               ],
             ),
           ),

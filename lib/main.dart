@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:omni_mobile_app/constants/hive_constant.dart';
+import 'package:omni_mobile_app/persistent/cart_data_dao/cart_data_dao.dart';
+import 'package:omni_mobile_app/providers/add_to_cart/add_to_cart_provider.dart';
+import 'package:omni_mobile_app/providers/check_out_provider/check_out_provider.dart';
 import 'package:omni_mobile_app/screens/auth/authenticate.dart';
 import 'package:omni_mobile_app/screens/auth/login.dart';
 import 'package:omni_mobile_app/screens/auth/register.dart';
-import 'package:omni_mobile_app/screens/index.dart';
-import 'package:omni_mobile_app/screens/product_detail/product_detail.dart';
-import 'package:omni_mobile_app/screens/profile/profile.dart';
 import 'package:omni_mobile_app/screens/splash_screen/splash_screen.dart';
 import 'package:omni_mobile_app/services/aboutus/aboutus_service.dart';
 import 'package:omni_mobile_app/services/authentication/user_service.dart';
@@ -21,8 +22,11 @@ import 'package:omni_mobile_app/services/search/search_suggestion.dart';
 import 'package:omni_mobile_app/services/slider/carousel_slider_service.dart';
 import 'package:omni_mobile_app/services/wishlist_service/user_wishlist_service.dart';
 import 'package:provider/provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(const MyApp());
 }
 
@@ -81,30 +85,34 @@ class _MyHomePageState extends State<MyHomePage> {
         ChangeNotifierProvider(create: (context) => IndexServiceAuth()),
         ChangeNotifierProvider(create: (context) => CategoryService()),
         ChangeNotifierProvider(create: (context) => CarouselSliderService()),
-        ChangeNotifierProvider(create: (context)=> ProductService()),
-        ChangeNotifierProvider(create: (context)=> BrandService()),
-        ChangeNotifierProvider(create: (context)=> StoreWithProduct()),
-        ChangeNotifierProvider(create: (context)=> CategoryWithProduct()),
-        ChangeNotifierProvider(create: (context)=> SearchService()),
-        ChangeNotifierProvider(create: (context)=> UserService()),
-        ChangeNotifierProvider(create: (context)=> UserWishListService()),
-        ChangeNotifierProvider(create: (context)=> AboutUsService()),
-        ChangeNotifierProvider(create: (context)=> SearchSuggestionService()),
-        ChangeNotifierProvider(create: (context)=> RelatedProductService())
+        ChangeNotifierProvider(create: (context) => ProductService()),
+        ChangeNotifierProvider(create: (context) => BrandService()),
+        ChangeNotifierProvider(create: (context) => StoreWithProduct()),
+        ChangeNotifierProvider(create: (context) => CategoryWithProduct()),
+        ChangeNotifierProvider(create: (context) => SearchService()),
+        ChangeNotifierProvider(create: (context) => UserService()),
+        ChangeNotifierProvider(create: (context) => UserWishListService()),
+        ChangeNotifierProvider(create: (context) => AboutUsService()),
+        ChangeNotifierProvider(create: (context) => SearchSuggestionService()),
+        ChangeNotifierProvider(create: (context) => RelatedProductService()),
+        //for adding new cart
+        ChangeNotifierProvider(
+          create: (context) => AddToCartNotifier(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CheckOutProvider(),
+        ),
       ],
       child: MaterialApp(
-        debugShowCheckedModeBanner : false,
+        debugShowCheckedModeBanner: false,
         navigatorKey: myNavigatorKey,
         initialRoute: '/',
         routes: {
-          '/': (context) => SplashScreen(),
-          
-          
-          'login':(context) => Authenticate(),
-          'register' : (context) => Register()
+          '/': (context) => const SplashScreen(),
+          'login': (context) => const Authenticate(),
+          'register': (context) => const Register()
         },
       ),
     );
-    
   }
 }

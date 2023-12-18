@@ -33,15 +33,13 @@ class LatestProducts extends StatelessWidget {
     var size = MediaQuery.of(context).size;
 
     return GridView.count(
-      physics: NeverScrollableScrollPhysics(),
-      crossAxisCount: size.width > 600 ? 3 : 2,
-      childAspectRatio: size.width > 600 ? 1.2 : 0.65,
-      shrinkWrap: true,
-      children: products
-              .map<Widget>((e) => listItem(
-                  Colors.white, "title", context, e))
-              .toList()
-    );
+        physics: NeverScrollableScrollPhysics(),
+        crossAxisCount: size.width > 600 ? 3 : 2,
+        childAspectRatio: size.width > 600 ? 1.2 : 0.65,
+        shrinkWrap: true,
+        children: products
+            .map<Widget>((e) => listItem(Colors.white, "title", context, e))
+            .toList());
   }
 
   Widget listItem(Color color, String title, BuildContext context, dynamic e) =>
@@ -52,6 +50,7 @@ class LatestProducts extends StatelessWidget {
             pushNewScreen(
               context,
               screen: ProductDetail(
+                id: e['id'],
                 title: e["name"],
                 itemDescription: e["item_description"],
                 category: "No Data in API",
@@ -73,18 +72,17 @@ class LatestProducts extends StatelessWidget {
             child: Column(
               children: [
                 Container(
-                  width: MediaQuery.of(context).size.width /2.1,
+                  width: MediaQuery.of(context).size.width / 2.1,
                   alignment: Alignment.centerRight,
                   child: Heart(
-            userId: userId,
-                productId: e["id"].toString(),
-                wishLists: wishLists,
-                isWishList: checkInWishList(wishLists, e["id"].toString())
-          ),
+                      userId: userId,
+                      productId: e["id"].toString(),
+                      wishLists: wishLists,
+                      isWishList:
+                          checkInWishList(wishLists, e["id"].toString())),
                 ),
                 Container(
                   decoration: BoxDecoration(
-                      
                       image: DecorationImage(
                           image: NetworkImage(ZtradeAPI.productImageUrl +
                               e["product_image"][0]["thumbnails"]

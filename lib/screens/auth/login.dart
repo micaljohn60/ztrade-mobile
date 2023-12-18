@@ -1,19 +1,11 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:omni_mobile_app/api/api_response.dart';
 import 'package:omni_mobile_app/constants/color.dart';
 import 'package:omni_mobile_app/main.dart';
-import 'package:omni_mobile_app/providers/app_providers.dart';
-import 'package:omni_mobile_app/screens/home/home.dart';
-import 'package:omni_mobile_app/screens/index.dart';
 import 'package:omni_mobile_app/services/authentication/login_service.dart';
 import 'package:omni_mobile_app/services/secure_storage/custom_secure_storage.dart';
-import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../model/user.dart';
 import '../../share/components/snackbar/snackbar.dart';
 
@@ -114,7 +106,7 @@ class _LoginState extends State<Login> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   onSaved: (value) => email = value,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       label: Text("example123@gmail.com"),
                       hintText: 'Enter Email'),
                   validator: (value) =>
@@ -125,7 +117,7 @@ class _LoginState extends State<Login> {
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
                   onSaved: (value) => password = value,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                       label: Text("Password"), hintText: 'Enter your password'),
                   validator: (value) =>
                       value.isEmpty ? 'Please fill this form' : null,
@@ -134,7 +126,11 @@ class _LoginState extends State<Login> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  TextButton(onPressed: () {_launchUrl();}, child: Text("Forget Password?"))
+                  TextButton(
+                      onPressed: () {
+                        _launchUrl();
+                      },
+                      child: const Text("Forget Password?"))
                 ],
               ),
               Padding(
@@ -150,7 +146,8 @@ class _LoginState extends State<Login> {
                   style: ElevatedButton.styleFrom(
                     elevation: 0,
                     primary: primaryBackgroundColor,
-                    padding: EdgeInsets.symmetric(horizontal: 90, vertical: 5),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 90, vertical: 5),
                   ),
                 ),
               ),

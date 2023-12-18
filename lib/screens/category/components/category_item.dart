@@ -15,25 +15,23 @@ import '../../../providers/app_providers.dart';
 class CategoryItems extends StatefulWidget {
   bool isHomePage;
   List<dynamic> wishLists;
-  CategoryItems({Key key, this.isHomePage,this.wishLists}) : super(key: key);
+  CategoryItems({Key key, this.isHomePage, this.wishLists}) : super(key: key);
 
   @override
   State<CategoryItems> createState() => _CategoryItemsState();
-  
 }
 
 class _CategoryItemsState extends State<CategoryItems> {
   CustomSecureStorage css = CustomSecureStorage();
   String newValue = "n";
-  
+
   @override
   void initState() {
     // TODO: implement initState
     readToken();
     super.initState();
-    
-    
   }
+
   Future<void> readToken() async {
     final String value = await css.readValueName("session_id");
     setState(() {
@@ -41,10 +39,8 @@ class _CategoryItemsState extends State<CategoryItems> {
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
-    
     context.read<CategoryService>().fetchData(newValue);
     List<String> widgetList = [
       'A',
@@ -59,104 +55,123 @@ class _CategoryItemsState extends State<CategoryItems> {
       'J'
     ];
     var size = MediaQuery.of(context).size;
-   
-    return Consumer<CategoryService>(
-      builder: ((context, value, child) {
-        return value.map.length == 0 && !value.error
-            ? Center(
-                child: Loading(height: 160,)
-              )
-            : value.error
-                ? Center(child: Text(value.errorMessage))
-                : RefreshIndicator(
+
+    return Consumer<CategoryService>(builder: ((context, value, child) {
+      return value.map.length == 0 && !value.error
+          ? Center(
+              child: Loading(
+              height: 160,
+            ))
+          : value.error
+              ? Center(child: Text(value.errorMessage))
+              : RefreshIndicator(
                   onRefresh: () async {
                     await context.read<CategoryService>().fetchData(newValue);
                   },
                   child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 8.0, right: 8.0, bottom: 8.0, top: 15.0),
-                          child: Text(
-                            "Category",
-                            style: GoogleFonts.poppins(
-                                fontSize: 20.0, fontWeight: FontWeight.w600),
-                          ),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(
+                            left: 8.0, right: 8.0, bottom: 8.0, top: 15.0),
+                        child: Text(
+                          "Category",
+                          style: GoogleFonts.poppins(
+                              fontSize: 20.0, fontWeight: FontWeight.w600),
                         ),
-                        
-                        GridView.count(
-                            physics: NeverScrollableScrollPhysics(),
-                            crossAxisCount: size.width > 600 ? 4 : 3,
-                            childAspectRatio: size.width > 600 ? 2 : 0.9,
-                            shrinkWrap: true,
-                            children: !widget.isHomePage
-                                ? 
-                                value.map["category"].length >=6 ?
-                                value.map["category"]
-                                    .sublist(0, 6)
-                                    .map<Widget>((e) => listItem(Colors.white, "Fresh",value.map["category"], context,e,value.map["wishlist"]))
-                                    .toList()
-                                  :
-                                  value.map["category"]
-                                    .map<Widget>((e) => listItem(Colors.white, "Fresh",value.map["category"], context,e,value.map["wishlist"]))
-                                    .toList()
-                                : value.map["category"]
-                                    .map<Widget>((e) => listItem(Colors.white, "Fresh",value.map["category"], context,e,value.map["wishlist"]))
-                                    .toList())
-                      ],
-                    ),
+                      ),
+                      GridView.count(
+                          physics: NeverScrollableScrollPhysics(),
+                          crossAxisCount: size.width > 600 ? 4 : 3,
+                          childAspectRatio: size.width > 600 ? 2 : 0.9,
+                          shrinkWrap: true,
+                          children: !widget.isHomePage
+                              ? value.map["category"].length >= 6
+                                  ? value.map["category"]
+                                      .sublist(0, 6)
+                                      .map<Widget>((e) => listItem(
+                                          Colors.white,
+                                          "Fresh",
+                                          value.map["category"],
+                                          context,
+                                          e,
+                                          value.map["wishlist"]))
+                                      .toList()
+                                  : value.map["category"]
+                                      .map<Widget>((e) => listItem(
+                                          Colors.white,
+                                          "Fresh",
+                                          value.map["category"],
+                                          context,
+                                          e,
+                                          value.map["wishlist"]))
+                                      .toList()
+                              : value.map["category"]
+                                  .map<Widget>((e) => listItem(
+                                      Colors.white,
+                                      "Fresh",
+                                      value.map["category"],
+                                      context,
+                                      e,
+                                      value.map["wishlist"]))
+                                  .toList())
+                    ],
+                  ),
                 );
-    })
-    );
-      
-   }
+    }));
+  }
   // Widget listItem1(Color color, String title,List data,BuildContext context,dynamic e){
   //   print("E is here");
   //   print(e);
   // }
 
-  Widget listItem(Color color, String title,List data,BuildContext context,dynamic e,List wishList)=> 
-  
-     Padding(
+  Widget listItem(Color color, String title, List data, BuildContext context,
+          dynamic e, List wishList) =>
+      Padding(
         padding: const EdgeInsets.all(5.0),
         child: InkWell(
-          onTap: (){
+          onTap: () {
             AppProviders.disposeCategoryWithProductProvider(context);
             pushNewScreen(
-                context,
-                screen: CategoryDetail(
-                  title: e["name"],
-                  categoryId: e["id"].toString(),
-                  wishLists: wishList,
-                  ),
-                
+              context,
+              screen: CategoryDetail(
+                title: e["name"],
+                categoryId: e["id"].toString(),
+                wishLists: wishList,
+              ),
             );
+            print('this is product list =======> ${e["product"]}');
           },
           child: Container(
-            decoration: BoxDecoration(boxShadow: [
-              BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
-                  spreadRadius: 3.0,
-                  blurRadius: 5.0)
-            ], color: color,),
+            decoration: BoxDecoration(
+              boxShadow: [
+                BoxShadow(
+                    color: Colors.grey.withOpacity(0.2),
+                    spreadRadius: 3.0,
+                    blurRadius: 5.0)
+              ],
+              color: color,
+            ),
             height: 90.0,
             width: 100,
             child: Column(
-              
               children: [
                 Container(
                   decoration: BoxDecoration(
-                      
                       image: DecorationImage(
-                          image: NetworkImage(ZtradeAPI.categoryImageUrl+ e["image"]), fit: BoxFit.cover)),
+                          image: NetworkImage(
+                              ZtradeAPI.categoryImageUrl + e["image"]),
+                          fit: BoxFit.cover)),
                   height: 80.0,
                   width: 130,
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top:8.0),
-                  child: Text(e["name"].toString(),textAlign: TextAlign.center,),
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text(
+                    e["name"].toString(),
+                    textAlign: TextAlign.center,
+                  ),
                 )
               ],
             ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:omni_mobile_app/screens/category/components/loading/loading.dart';
 import 'package:omni_mobile_app/screens/product_detail/product_detail.dart';
-import 'package:omni_mobile_app/services/product/product.dart';
 import 'package:omni_mobile_app/services/product/related_products.dart';
 import 'package:omni_mobile_app/share/components/heart/heart.dart';
 import 'package:omni_mobile_app/share/components/horizontal_slider_products/components/price_tag.dart';
@@ -57,7 +56,7 @@ class _RelatedProductsState extends State<RelatedProducts> {
     var size = MediaQuery.of(context).size;
     return Consumer<RelatedProductService>(
       builder: ((context, value, child) {
-        return value.map.length == 0 && !value.error
+        return value.map.isEmpty && !value.error
             ? Center(
                 child: Loading(
                 height: 330,
@@ -80,7 +79,6 @@ class _RelatedProductsState extends State<RelatedProducts> {
                         ),
                         SizedBox(
                           height: 280,
-                          width: size.width,
                           child: ListView.builder(
                             itemCount: value.map["products"].length,
                             scrollDirection: Axis.horizontal,
@@ -91,6 +89,7 @@ class _RelatedProductsState extends State<RelatedProducts> {
                                   pushNewScreen(context,
                                       screen: ProductDetail(
                                         favItems: [],
+                                        id: value.map["products"][index]["id"],
                                         title: value.map["products"][index]
                                             ["name"],
                                         price: calculatePrice(
@@ -107,7 +106,7 @@ class _RelatedProductsState extends State<RelatedProducts> {
                                       ));
                                 },
                                 child: Container(
-                                  width: 160,
+                                  width: size.width * 0.45,
                                   decoration: BoxDecoration(
                                       color: const Color.fromRGBO(
                                           255, 255, 255, 1),
@@ -121,6 +120,7 @@ class _RelatedProductsState extends State<RelatedProducts> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(0.0),
                                     child: Column(
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Container(
                                             width: size.width / 2.1,
@@ -145,26 +145,17 @@ class _RelatedProductsState extends State<RelatedProducts> {
                                                   .replaceAll('"', ''),
                                           isFav: false,
                                         ),
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  left: 8.0),
-                                              child: SizedBox(
-                                                width: MediaQuery.of(context).size.width/2.4,
-                                                child: Text(
-                                                    value.map["products"][index]
-                                                        ["name"],
-                                                        overflow : TextOverflow.ellipsis,
-                                                    style: GoogleFonts.poppins(
-                                                      fontSize: 16.0,
-                                                      
-                                                    )),
-                                              ),
-                                            ),
-                                          ],
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 8.0),
+                                          child: Text(
+                                              value.map["products"][index]
+                                                  ["name"],
+                                              // "zHi",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: GoogleFonts.poppins(
+                                                fontSize: 16.0,
+                                              )),
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.only(
