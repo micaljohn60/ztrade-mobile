@@ -1,41 +1,63 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
-
 import '../../model/vo/cart_vo/cart_vo.dart';
 import '../../model/vo/data_vo/data_vo.dart';
 
 class AddToCartNotifier extends ChangeNotifier {
-  Carts _carts = Carts();
   List<Datum> _cartList = [];
-
+  String isSuccessToAdd = "";
+  String isSuccessDelete = "";
+  String _cartDataReqSuccess = "";
   bool _isDispose = false;
   bool _isLoading = true;
   int _quantity = 0;
   String _error = "";
+  int cartLength = 0;
 
   int get quantity => _quantity;
-  Carts get cartListFromSever => _carts;
-  List<Datum> get cartDataList => _cartList;
+  List<Datum> get cartDataList => _cartList.toList();
   String get error => _error;
   bool get isLoading => _isLoading;
+  String get severLoad => isSuccessToAdd;
+  String get delete => isSuccessDelete;
 
+  String get cartDataReqSuccess => _cartDataReqSuccess;
   void plusCount() {
-    ++_quantity;
+    _quantity++;
+    notifyListeners();
+  }
+
+  // set reqSuccess(String str) {
+  //   _cartDataReqSuccess = str;
+  //   notifyListeners();
+  // }
+  //
+  // set successToAdd(String str) {
+  //   isSuccessToAdd = str;
+  //   notifyListeners();
+  // }
+  //
+  // set successToDelete(String str) {
+  //   isSuccessDelete = str;
+  //   notifyListeners();
+  // }
+
+  void removeCart(int index) {
+    _cartList.removeAt(index);
     notifyListeners();
   }
 
   void reduceCount() {
     if (_quantity > 0) {
-      --_quantity;
+      _quantity--;
     }
     notifyListeners();
   }
 
 //adding item to cart
-  addToCart(String productId, String quantity, String token) async {
+  addToCart(int productId, int quantity, String token) async {
     const String endpoint = "https://api.ztrademm.com/api/cart/add";
     final url = Uri.parse(endpoint);
 
@@ -47,17 +69,25 @@ class AddToCartNotifier extends ChangeNotifier {
       Response response = await http.post(
         url,
         headers: headers,
-        body: {"product_id": productId, "quantity": quantity},
+        body: {
+          "product_id": productId.toString(),
+          "quantity": quantity.toString()
+        },
       );
       if (response.statusCode == 201) {
         final responseBody = json.decode(response.body);
-        print('Successfully Create: ${response.statusCode}');
+        isSuccessToAdd = responseBody["status"];
+
+        print(" success add $isSuccessToAdd");
+
+        print('Successfully Create New Cart Item: ${response.statusCode}');
       } else {
-        print(response.statusCode);
+        print("fail adding to cart : ${response.statusCode}");
       }
     } catch (error) {
       print('Error from adding to cart : $error');
     }
+    notifyListeners();
   }
 
   // cart items from network
@@ -73,10 +103,7 @@ class AddToCartNotifier extends ChangeNotifier {
 
       if (response.statusCode == 201) {
         print('Data request successfully: ${response.body}');
-        _carts = cartsFromJson(response.body);
-
         _cartList = cartsFromJson(response.body).data;
-        print(_cartList);
       } else {
         _error = response.statusCode.toString();
       }
@@ -102,7 +129,7 @@ class AddToCartNotifier extends ChangeNotifier {
       );
       if (response.statusCode == 201) {
         final responseBody = json.decode(response.body);
-        print(responseBody["status"]);
+
         print('Successfully adding quantity : ${response.statusCode}');
       } else {
         print(response.statusCode);
@@ -110,6 +137,7 @@ class AddToCartNotifier extends ChangeNotifier {
     } catch (error) {
       print('Error from adding to cart : $error');
     }
+    notifyListeners();
   }
 
   reduceQuantityToSever(int cartId, String token) async {
@@ -136,6 +164,7 @@ class AddToCartNotifier extends ChangeNotifier {
     } catch (error) {
       print('Error from adding to cart : $error');
     }
+    notifyListeners();
   }
 
   deleteCartFromSever(int productId, String token) async {
@@ -154,26 +183,13 @@ class AddToCartNotifier extends ChangeNotifier {
       );
       if (response.statusCode == 201) {
         final responseBody = json.decode(response.body);
-        print(responseBody);
-        print('Successfully delete: ${response.statusCode}');
+        isSuccessDelete = responseBody["status"];
       } else {
         print(response.statusCode);
       }
     } catch (error) {
       print('Error from adding to cart : $error');
     }
-  }
-
-  @override
-  void notifyListeners() {
-    if (!_isDispose) {
-      super.notifyListeners();
-    }
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _isDispose = true;
+    notifyListeners();
   }
 }

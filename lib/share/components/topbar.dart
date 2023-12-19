@@ -1,8 +1,6 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
-import 'package:badges/badges.dart' as badges;
 import 'package:omni_mobile_app/constants/color.dart';
-import 'package:omni_mobile_app/model/vo/cart_length_vo/cart_length.dart';
 import 'package:omni_mobile_app/providers/add_to_cart/add_to_cart_provider.dart';
 import 'package:omni_mobile_app/providers/app_providers.dart';
 import 'package:omni_mobile_app/screens/cart/cart_screen.dart';
@@ -34,7 +32,8 @@ class _TopBarState extends State<TopBar> {
       newValue = value;
       token = userToken;
     });
-    context.read<AddToCartNotifier>().getCartsFromAPI(token);
+    Provider.of<AddToCartNotifier>(context, listen: false)
+        .getCartsFromAPI(token);
   }
 
   @override
@@ -48,7 +47,7 @@ class _TopBarState extends State<TopBar> {
   @override
   Widget build(BuildContext context) {
     context.read<SearchSuggestionService>().fetchData(newValue);
-    // var size = MediaQuery.of(context).size;
+
     return Container(
       decoration: const BoxDecoration(color: primaryBackgroundColor),
       height: 80.0,
@@ -180,7 +179,7 @@ class _TopBarState extends State<TopBar> {
               elevation: 0,
               ignorePointer: false,
               badgeContent: Text(
-                notifier.cartDataList.length.toString(),
+                '${notifier.cartDataList.length}',
                 style: appStyle(12, FontWeight.w300, Colors.white),
               ),
               animationType: BadgeAnimationType.fade,
@@ -189,8 +188,8 @@ class _TopBarState extends State<TopBar> {
                 onPressed: () => {
                   pushNewScreen(
                     context,
-                    screen: CartScreen(),
-                  )
+                    screen: const CartScreen(),
+                  ),
                 },
                 icon: const Icon(
                   UniconsLine.shopping_cart,

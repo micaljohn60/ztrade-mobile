@@ -12,7 +12,7 @@ import 'package:omni_mobile_app/share/components/related_products/related_produc
 import 'package:omni_mobile_app/share/flutter_toast/flutter_toast.dart';
 import 'package:provider/provider.dart';
 import 'package:unicons/unicons.dart';
-import '../../model/vo/cart_vo/cart_vo.dart';
+
 import '../../providers/add_to_cart/add_to_cart_provider.dart';
 import '../../share/components/topbar.dart';
 
@@ -54,6 +54,8 @@ class _ProductDetailState extends State<ProductDetail> {
       isLoading = false;
       _token = token;
     });
+    final provider = Provider.of<AddToCartNotifier>(context, listen: false);
+    provider.getCartsFromAPI(_token);
   }
 
   @override
@@ -64,6 +66,9 @@ class _ProductDetailState extends State<ProductDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = Provider.of<AddToCartNotifier>(context);
+    print("cart data list from detail ===>${provider.cartDataList}");
+
     return Container(
       color: primaryBackgroundColor,
       child: SafeArea(
@@ -199,12 +204,17 @@ class _ProductDetailState extends State<ProductDetail> {
                                   "You need to add Quantity amount");
                             }
                             if (notifier > 0) {
-                              instance.addToCart(
-                                  "${widget.id}", "$notifier", _token);
+                              instance.addToCart(widget.id, notifier, _token);
+                              setState(() {
+                                instance.getCartsFromAPI(_token);
+                                instance.cartDataList;
+                              });
+
                               showToastMessage(
                                   "${widget.title} is successfully adding to cart");
                             }
-                            instance.getCartsFromAPI(_token);
+
+                            instance.notifyListeners();
                           },
                           child: Container(
                             width: MediaQuery.of(context).size.width * 0.42,

@@ -11,6 +11,7 @@ import 'package:unicons/unicons.dart';
 import '../../providers/add_to_cart/add_to_cart_provider.dart';
 import '../../services/secure_storage/custom_secure_storage.dart';
 import '../check_out_list/check_out_list_screen.dart';
+import 'package:intl/intl.dart';
 
 class CartScreen extends StatefulWidget {
   const CartScreen({
@@ -43,8 +44,7 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     final addToCartNotifier = Provider.of<AddToCartNotifier>(context);
-
-    debugPrint("build called");
+    debugPrint("build called from cart screen");
     print(addToCartNotifier.cartDataList);
 
     final width = MediaQuery.of(context).size.width;
@@ -108,7 +108,7 @@ class _CartScreenState extends State<CartScreen> {
                         final name = data.product.name.toString();
                         int quantity = data.quantity.toInt();
                         final category = data.product.category.name.toString();
-                        final price = data.product.price.toString();
+                        int price = data.singlePrice;
                         String fullUrl = data.product.productImage
                             .map((e) => e.fullThumbnailLink.toString())
                             .toString();
@@ -116,6 +116,8 @@ class _CartScreenState extends State<CartScreen> {
                             fullUrl.replaceAll('(', '').replaceAll(')', '');
                         CachedNetworkImageProvider imageProvider =
                             CachedNetworkImageProvider(fullUrl);
+                        String formattedNumber =
+                            NumberFormat('#,###').format(price);
                         return Padding(
                           padding: const EdgeInsets.all(12),
                           child: Container(
@@ -219,7 +221,7 @@ class _CartScreenState extends State<CartScreen> {
                                           height: 8,
                                         ),
                                         Text(
-                                          " $price MMK",
+                                          " $formattedNumber MMK",
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                           style: appStyle(14, FontWeight.w500,
@@ -248,15 +250,18 @@ class _CartScreenState extends State<CartScreen> {
                                                 setState(() {
                                                   dataList[index].quantity--;
                                                 });
+
                                                 notifier.reduceQuantityToSever(
                                                     cartId, _token);
                                               }
                                               if (dataList[index].quantity ==
                                                   0) {
-                                                notifier.cartDataList
-                                                    .removeAt(index);
+                                                notifier.removeCart(index);
+
                                                 notifier.deleteCartFromSever(
                                                     cartId, _token);
+                                                showToastMessage(
+                                                    "$name is successfully delete from cart");
                                               }
                                             },
                                             child: const Icon(
@@ -298,47 +303,46 @@ class _CartScreenState extends State<CartScreen> {
                   ),
                 ],
               ),
-              Consumer<CheckOutProvider>(builder: (_, notifier, __) {
-                return Positioned(
-                  bottom: 5,
-                  child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: GestureDetector(
-                      onTap: () {
-                        notifier.getCartsFromAPI(_token);
-
-                        if (notifier.cartList.isNotEmpty) {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const CheckOutScreen(),
-                            ),
-                          );
-                        } else {
-                          showToastMessage("You Have Nothing To Check Out");
-                        }
-                      },
-                      child: Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                        ),
-                        alignment: Alignment.center,
-                        width: width * 0.9,
-                        height: 50,
-                        decoration: const BoxDecoration(
-                          color: primaryButtonColor,
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(6),
+              Positioned(
+                bottom: 5,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: GestureDetector(
+                    onTap: () {
+                      Provider.of<CheckOutProvider>(context, listen: false)
+                          .getAddress(_token);
+                      if (dataList.isNotEmpty) {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => CheckOutScreen(
+                                cartDataList: dataList, token: _token),
                           ),
+                        );
+                      } else {
+                        showToastMessage("You Have Nothing To Check Out");
+                      }
+                    },
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                      ),
+                      alignment: Alignment.center,
+                      width: width * 0.9,
+                      height: 50,
+                      decoration: const BoxDecoration(
+                        color: primaryButtonColor,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(6),
                         ),
-                        child: Text(
-                          "Check Out",
-                          style: appStyle(20, FontWeight.bold, Colors.white),
-                        ),
+                      ),
+                      child: Text(
+                        "Check Out",
+                        style: appStyle(20, FontWeight.bold, Colors.white),
                       ),
                     ),
                   ),
-                );
-              }),
+                ),
+              ),
             ],
           ),
         );
@@ -346,10 +350,9 @@ class _CartScreenState extends State<CartScreen> {
     return Scaffold(
         body: (addToCartNotifier.isLoading && addToCartNotifier.error.isEmpty)
             ? loadingUI()
-            : Selector<AddToCartNotifier, List<Datum>>(
-                selector: (context, notifier) => notifier.cartDataList,
-                builder: (context, notifier, __) {
-                  return bodyUI(notifier);
+            : Consumer<AddToCartNotifier>(
+                builder: (_, notifier, __) {
+                  return bodyUI(notifier.cartDataList);
                 },
               ));
   }
