@@ -13,7 +13,8 @@ import '../product_detail/product_detail.dart';
 class Search extends StatefulWidget {
   String text;
   String id;
-  Search({Key key, this.text, this.id}) : super(key: key);
+  String userID;
+  Search({Key key, this.text, this.id, this.userID}) : super(key: key);
 
   @override
   State<Search> createState() => _SearchState();
@@ -123,6 +124,7 @@ class _SearchState extends State<Search> {
             pushNewScreen(
               context,
               screen: ProductDetail(
+                userId: widget.userID,
                 id: e['id'],
                 title: e["name"],
                 itemDescription: e["item_description"],

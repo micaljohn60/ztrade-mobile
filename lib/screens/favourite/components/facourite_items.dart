@@ -35,6 +35,7 @@ class FavouriteItems extends StatelessWidget {
             onTap: () {
               pushNewScreen(context,
                   screen: ProductDetail(
+                    userId: userID,
                     id: products[index]["product"]["id"],
                     title: products[index]["product"]["name"],
                     price: calculatePrice(products[index]["product"]["price"],

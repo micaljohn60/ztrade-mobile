@@ -9,8 +9,9 @@ import '../horizontal_slider_products/components/product_title.dart';
 import '../horizontal_slider_products/most_popular.dart';
 
 class StoreBrand extends StatelessWidget {
+  String userID;
   String title;
-  StoreBrand({Key key, this.title}) : super(key: key);
+  StoreBrand({Key key, this.title, this.userID}) : super(key: key);
 
   List<String> links = [
     "https://www.pinkvilla.com/imageresize/50258964_105969377090712_3773379888770662358_n.jpg?width=752&t=pvorg",
@@ -27,9 +28,7 @@ class StoreBrand extends StatelessWidget {
     return Consumer<BrandService>(
       builder: (context, value, child) {
         return value.map.length == 0 && !value.error
-            ? Center(
-                
-              )
+            ? Center()
             : value.error
                 ? Center(
                     child: Text(value.errorMessage),
@@ -50,13 +49,21 @@ class StoreBrand extends StatelessWidget {
                           height: 170,
                           width: size.width,
                           child: ListView.builder(
-                            itemCount:value. map.length,
+                            itemCount: value.map.length,
                             scrollDirection: Axis.horizontal,
                             itemBuilder: (context, index) => Padding(
                               padding: const EdgeInsets.all(6.0),
                               child: InkWell(
-                                onTap: ()=>{
-                                  pushNewScreen(context, screen: StoreDetail(title: value.map[index]["brand_name"],storeId: value.map[index]["id"].toString(),))
+                                onTap: () => {
+                                  pushNewScreen(
+                                    context,
+                                    screen: StoreDetail(
+                                      userID: userID,
+                                      title: value.map[index]["brand_name"],
+                                      storeId:
+                                          value.map[index]["id"].toString(),
+                                    ),
+                                  )
                                 },
                                 child: Container(
                                     decoration: const BoxDecoration(
@@ -66,8 +73,8 @@ class StoreBrand extends StatelessWidget {
                                             offset: Offset(0, 14),
                                             spreadRadius: -11,
                                             blurRadius: 21,
-                                            color:
-                                                Color.fromRGBO(205, 205, 205, 1),
+                                            color: Color.fromRGBO(
+                                                205, 205, 205, 1),
                                           )
                                         ]),
                                     child: Padding(
@@ -77,7 +84,9 @@ class StoreBrand extends StatelessWidget {
                                         height: 150,
                                         decoration: BoxDecoration(
                                             image: DecorationImage(
-                                                image: NetworkImage(ZtradeAPI.storeImageUrl+ value.map[index]["image"]),
+                                                image: NetworkImage(ZtradeAPI
+                                                        .storeImageUrl +
+                                                    value.map[index]["image"]),
                                                 fit: BoxFit.contain)),
                                       ),
                                     )),

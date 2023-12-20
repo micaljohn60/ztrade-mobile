@@ -13,9 +13,11 @@ import 'package:provider/provider.dart';
 import '../../../providers/app_providers.dart';
 
 class CategoryItems extends StatefulWidget {
+  String userID;
   bool isHomePage;
   List<dynamic> wishLists;
-  CategoryItems({Key key, this.isHomePage, this.wishLists}) : super(key: key);
+  CategoryItems({Key key, this.isHomePage, this.wishLists, this.userID})
+      : super(key: key);
 
   @override
   State<CategoryItems> createState() => _CategoryItemsState();
@@ -136,6 +138,7 @@ class _CategoryItemsState extends State<CategoryItems> {
             pushNewScreen(
               context,
               screen: CategoryDetail(
+                userId: widget.userID,
                 title: e["name"],
                 categoryId: e["id"].toString(),
                 wishLists: wishList,

@@ -132,9 +132,10 @@ class _HomeState extends State<Home> {
                               },
                               child: Column(
                                 children: [
-                                  const TopBar(),
+                                  TopBar(userId: newValue),
                                   ImageSlider(images: value.map["sliders"]),
                                   CategoryItems(
+                                      userID: newValue,
                                       isHomePage: false,
                                       wishLists: value.map["wishlist"]),
                                   value.map["mostpopular"].length == 0
@@ -164,7 +165,10 @@ class _HomeState extends State<Home> {
                                               ["image"],
                                         )
                                       : Container(),
-                                  StoreBrand(title: "Brands"),
+                                  StoreBrand(
+                                    title: "Brands",
+                                    userID: newValue,
+                                  ),
                                   value.map["newarrival"].length == 0
                                       ? Container()
                                       : HorizontalSliderProducts(
@@ -259,7 +263,9 @@ class _HomeState extends State<Home> {
                             child: SingleChildScrollView(
                               child: Column(
                                 children: [
-                                  const TopBar(),
+                                  TopBar(
+                                    userId: newValue,
+                                  ),
                                   ImageSlider(images: value.map["sliders"]),
                                   CategoryItems(
                                     isHomePage: false,
@@ -302,7 +308,10 @@ class _HomeState extends State<Home> {
                                         )
                                       : Container(),
 
-                                  StoreBrand(title: "Brands"),
+                                  StoreBrand(
+                                    title: "Brands",
+                                    userID: newValue,
+                                  ),
 
                                   value.map["newarrival"].length == 0
                                       ? Container()

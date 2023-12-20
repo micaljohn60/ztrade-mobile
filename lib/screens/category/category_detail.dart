@@ -13,12 +13,18 @@ import '../../static/ztradeAPI.dart';
 import '../product_detail/product_detail.dart';
 
 class CategoryDetail extends StatefulWidget {
+  String userId;
   int id;
   String title;
   String categoryId;
   List<dynamic> wishLists;
   CategoryDetail(
-      {Key key, this.id, this.title, this.categoryId, this.wishLists})
+      {Key key,
+      this.id,
+      this.title,
+      this.categoryId,
+      this.userId,
+      this.wishLists})
       : super(key: key);
 
   @override
@@ -65,7 +71,9 @@ class _CategoryDetailState extends State<CategoryDetail> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                const TopBar(),
+                                TopBar(
+                                  userId: widget.userId,
+                                ),
                                 value.map["data"].length == 0
                                     ? NoItem(
                                         errorText:
@@ -159,6 +167,7 @@ class _CategoryDetailState extends State<CategoryDetail> {
             pushNewScreen(
               context,
               screen: ProductDetail(
+                userId: widget.userId,
                 id: e['id'],
                 title: e["name"],
                 itemDescription: e["item_description"],

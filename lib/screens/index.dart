@@ -36,8 +36,6 @@ class _IndexState extends State<Index> {
       newValue = value;
       token = _token;
     });
-    Provider.of<AddToCartNotifier>(context, listen: false)
-        .getCartsFromAPI(token);
   }
 
   List<Widget> _buildScreens() {
@@ -85,15 +83,13 @@ class _IndexState extends State<Index> {
   @override
   void initState() {
     readToken();
-
+    final instance = Provider.of<AddToCartNotifier>(context, listen: false);
+    instance.getCartsFromAPI(token);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    // final instance =
-    //     Provider.of<AddToCartNotifier>(context).getCartsFromAPI(token);
-    // print("this is cart length=>" + instance.cartDataList.length.toString());
     PersistentTabController _controller;
 
     _controller = PersistentTabController(initialIndex: 0);

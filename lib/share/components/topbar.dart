@@ -14,8 +14,8 @@ import 'package:provider/provider.dart';
 import 'package:unicons/unicons.dart';
 
 class TopBar extends StatefulWidget {
-  const TopBar({Key key}) : super(key: key);
-
+  TopBar({Key key, this.userId}) : super(key: key);
+  String userId;
   @override
   State<TopBar> createState() => _TopBarState();
 }
@@ -47,7 +47,7 @@ class _TopBarState extends State<TopBar> {
   @override
   Widget build(BuildContext context) {
     context.read<SearchSuggestionService>().fetchData(newValue);
-
+    final width = MediaQuery.of(context).size.width;
     return Container(
       decoration: const BoxDecoration(color: primaryBackgroundColor),
       height: 80.0,
@@ -64,7 +64,7 @@ class _TopBarState extends State<TopBar> {
                       ? Text(value.errorMessage)
                       : SizedBox(
                           height: 65.0,
-                          width: MediaQuery.of(context).size.width * 0.7,
+                          width: newValue != null ? width * 0.7 : width * 0.8,
                           child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: RawAutocomplete(
@@ -97,6 +97,7 @@ class _TopBarState extends State<TopBar> {
                                       pushNewScreen(
                                         context,
                                         screen: Search(
+                                          userID: widget.userId,
                                           id: newValue,
                                           text: value,
                                         ),
@@ -172,29 +173,32 @@ class _TopBarState extends State<TopBar> {
             ),
           ),
           Consumer<AddToCartNotifier>(builder: (_, notifier, __) {
-            return Badge(
-              toAnimate: true,
-              showBadge: notifier.cartDataList.isNotEmpty,
-              badgeColor: Colors.redAccent,
-              elevation: 0,
-              ignorePointer: false,
-              badgeContent: Text(
-                '${notifier.cartDataList.length}',
-                style: appStyle(12, FontWeight.w300, Colors.white),
-              ),
-              animationType: BadgeAnimationType.fade,
-              padding: const EdgeInsets.all(10),
-              child: IconButton(
-                onPressed: () => {
-                  pushNewScreen(
-                    context,
-                    screen: const CartScreen(),
+            return Visibility(
+              visible: newValue != null,
+              child: Badge(
+                toAnimate: true,
+                showBadge: notifier.cartDataList.isNotEmpty,
+                badgeColor: Colors.redAccent,
+                elevation: 0,
+                ignorePointer: false,
+                badgeContent: Text(
+                  '${notifier.cartDataList.length}',
+                  style: appStyle(12, FontWeight.w300, Colors.white),
+                ),
+                animationType: BadgeAnimationType.fade,
+                padding: const EdgeInsets.all(10),
+                child: IconButton(
+                  onPressed: () => {
+                    pushNewScreen(
+                      context,
+                      screen: const CartScreen(),
+                    ),
+                  },
+                  icon: const Icon(
+                    UniconsLine.shopping_cart,
+                    size: 30.0,
+                    color: secondayBackgroundColor,
                   ),
-                },
-                icon: const Icon(
-                  UniconsLine.shopping_cart,
-                  size: 30.0,
-                  color: secondayBackgroundColor,
                 ),
               ),
             );

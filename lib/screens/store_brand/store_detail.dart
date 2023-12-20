@@ -11,9 +11,11 @@ import '../../static/ztradeAPI.dart';
 import '../product_detail/product_detail.dart';
 
 class StoreDetail extends StatelessWidget {
+  String userID;
   String title;
   String storeId;
-  StoreDetail({Key key, this.title, this.storeId}) : super(key: key);
+  StoreDetail({Key key, this.title, this.storeId, this.userID})
+      : super(key: key);
 
   String calculatePrice(String price, int percentage) {
     if (percentage > 0) {
@@ -83,6 +85,7 @@ class StoreDetail extends StatelessWidget {
             pushNewScreen(
               context,
               screen: ProductDetail(
+                userId: userID,
                 id: e["id"],
                 title: e["name"],
                 itemDescription: e["item_description"],

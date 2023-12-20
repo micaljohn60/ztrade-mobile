@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:omni_mobile_app/constants/color.dart';
+import 'package:omni_mobile_app/providers/check_out_provider/check_out_provider.dart';
 import 'package:omni_mobile_app/screens/product_detail/components/product_description.dart';
 import 'package:omni_mobile_app/screens/product_detail/components/product_image.dart';
 import 'package:omni_mobile_app/screens/product_detail/components/product_price_tag.dart';
@@ -17,6 +18,7 @@ import '../../providers/add_to_cart/add_to_cart_provider.dart';
 import '../../share/components/topbar.dart';
 
 class ProductDetail extends StatefulWidget {
+  String userId;
   int id;
   String title;
   List<dynamic> images;
@@ -26,6 +28,7 @@ class ProductDetail extends StatefulWidget {
   List<dynamic> favItems;
   ProductDetail(
       {Key key,
+      this.userId,
       this.title,
       this.price,
       this.itemDescription,
@@ -66,6 +69,10 @@ class _ProductDetailState extends State<ProductDetail> {
 
   @override
   Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    print("this is height  ====>$height");
+    bool isLogin = newValue == null && newValue == "n";
+    print("user login ===>$isLogin");
     final provider = Provider.of<AddToCartNotifier>(context);
     print("cart data list from detail ===>${provider.cartDataList}");
 
@@ -78,13 +85,17 @@ class _ProductDetailState extends State<ProductDetail> {
             children: [
               Column(
                 children: [
-                  const TopBar(),
+                  TopBar(
+                    userId: widget.userId,
+                  ),
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.68,
+                    height: (widget.userId != null)
+                        ? height * 0.675
+                        : height * 0.775,
                     width: MediaQuery.of(context).size.width,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: const BorderRadius.only(
+                    decoration: const BoxDecoration(
+                      color: secondayBackgroundColor,
+                      borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(12),
                         bottomRight: Radius.circular(12),
                       ),
@@ -139,100 +150,106 @@ class _ProductDetailState extends State<ProductDetail> {
                   ),
                 ],
               ),
-              Positioned(
-                bottom: 15,
-                left: 0,
-                right: 0,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Selector<AddToCartNotifier, int>(
-                    selector: (_, notifier) => notifier.quantity,
-                    builder: (_, notifier, __) => Row(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.4,
-                          height: 50,
-                          alignment: Alignment.center,
-                          decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(
-                                Radius.circular(16),
-                              ),
-                              color: Colors.grey.shade100),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  final instance =
-                                      context.read<AddToCartNotifier>();
-                                  instance.reduceCount();
-                                },
-                                color: primaryBackgroundColor,
-                                iconSize: 30,
-                                icon: const Icon(UniconsLine.minus_circle),
-                              ),
-                              Text(
-                                "$notifier",
-                                style: GoogleFonts.poppins(
-                                    color: Colors.black, fontSize: 20),
-                              ),
-                              IconButton(
-                                onPressed: () {
-                                  final instance =
-                                      context.read<AddToCartNotifier>();
-                                  instance.plusCount();
-                                },
-                                iconSize: 30,
-                                color: primaryBackgroundColor,
-                                icon: const Icon(UniconsLine.plus_circle),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 16,
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            print(
-                                "this is user token =====>$_token ${widget.id} $notifier");
-                            final instance = context.read<AddToCartNotifier>();
-                            if (notifier == 0) {
-                              showToastMessage(
-                                  "You need to add Quantity amount");
-                            }
-                            if (notifier > 0) {
-                              instance.addToCart(widget.id, notifier, _token);
-                              setState(() {
-                                instance.getCartsFromAPI(_token);
-                                instance.cartDataList;
-                              });
-
-                              showToastMessage(
-                                  "${widget.title} is successfully adding to cart");
-                            }
-
-                            instance.notifyListeners();
-                          },
-                          child: Container(
-                            width: MediaQuery.of(context).size.width * 0.42,
+              Visibility(
+                visible: widget.userId != null,
+                child: Positioned(
+                  bottom: 15,
+                  left: 0,
+                  right: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Selector<AddToCartNotifier, int>(
+                      selector: (_, notifier) => notifier.quantity,
+                      builder: (_, notifier, __) => Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.4,
                             height: 50,
                             alignment: Alignment.center,
                             decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(30),
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(16),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                IconButton(
+                                  onPressed: () {
+                                    final instance =
+                                        context.read<AddToCartNotifier>();
+                                    instance.reduceCount();
+                                  },
+                                  color: primaryBackgroundColor,
+                                  iconSize: 30,
+                                  icon: const Icon(UniconsLine.minus_circle),
                                 ),
-                                color: primaryBackgroundColor),
-                            child: Text(
-                              "Add To Cart",
-                              style:
-                                  appStyle(18, FontWeight.w600, Colors.white),
+                                Text(
+                                  "$notifier",
+                                  style: GoogleFonts.poppins(
+                                      color: Colors.black, fontSize: 20),
+                                ),
+                                IconButton(
+                                  onPressed: () {
+                                    final instance =
+                                        context.read<AddToCartNotifier>();
+                                    instance.plusCount();
+                                  },
+                                  iconSize: 30,
+                                  color: primaryBackgroundColor,
+                                  icon: const Icon(UniconsLine.plus_circle),
+                                ),
+                              ],
                             ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(
+                            width: 16,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              print(
+                                  "this is user token =====>$_token ${widget.id} $notifier");
+                              final instance =
+                                  context.read<AddToCartNotifier>();
+                              final provider = Provider.of<CheckOutProvider>(
+                                  context,
+                                  listen: false);
+                              if (notifier == 0) {
+                                showToastMessage(
+                                    "You need to add Quantity amount");
+                              }
+                              if (notifier > 0) {
+                                instance.addToCart(widget.id, notifier, _token);
+                                instance.getCartsFromAPI(_token);
+                                provider.getAddress(_token);
+                                setState(() {
+                                  instance.cartDataList;
+                                });
+
+                                showToastMessage(
+                                    "${widget.title} is successfully adding to cart");
+                              }
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.42,
+                              height: 50,
+                              alignment: Alignment.center,
+                              decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(30),
+                                  ),
+                                  color: primaryBackgroundColor),
+                              child: Text(
+                                "Add To Cart",
+                                style:
+                                    appStyle(18, FontWeight.w600, Colors.white),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),

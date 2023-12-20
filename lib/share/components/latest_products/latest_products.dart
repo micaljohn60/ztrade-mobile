@@ -50,6 +50,7 @@ class LatestProducts extends StatelessWidget {
             pushNewScreen(
               context,
               screen: ProductDetail(
+                userId: userId,
                 id: e['id'],
                 title: e["name"],
                 itemDescription: e["item_description"],

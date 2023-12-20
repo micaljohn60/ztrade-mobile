@@ -1,0 +1,65 @@
+[33mcommit 6376e4dcb36ebf9ddced2e3bf2e8c06860faa1b6[m[33m ([m[1;36mHEAD -> [m[1;32mdev-1[m[33m, [m[1;31morigin/dev-1[m[33m)[m
+Author: khantkhant2000 <116895641+khantkhant2000@users.noreply.github.com>
+Date:   Tue Dec 19 12:12:41 2023 +0630
+
+    order checkout cod implementation
+
+[33mcommit d3abf9dbaeffed1ae58df47ecd8199ca498cb1a8[m
+Author: khantkhant2000 <116895641+khantkhant2000@users.noreply.github.com>
+Date:   Mon Dec 18 14:27:30 2023 +0630
+
+    cart implementation
+
+[33mcommit 79007a6a999837f2f9a6db4f6401338c69d15abc[m[33m ([m[1;31morigin/dev[m[33m, [m[1;32mdev[m[33m)[m
+Author: micaljohn60 <micaljohn60@gmail.com>
+Date:   Mon Dec 11 21:47:45 2023 +0630
+
+    push to dev
+
+[33mcommit 3bdcb442cfe58c17d095fe92a3953d598ee2b229[m[33m ([m[1;31morigin/local-dev[m[33m)[m
+Author: mical <micaljohn60@gmail.com>
+Date:   Fri Jul 21 20:17:19 2023 +0800
+
+    finishing things up
+
+[33mcommit c00dde89efc52949c44cc561a7390c42ff90662a[m
+Author: mical <micaljohn60@gmail.com>
+Date:   Wed May 24 09:50:14 2023 +0630
+
+    fix signup error
+
+[33mcommit 043164a0d56e347fdc6336ae3cb234145eafe4be[m
+Author: mical <micaljohn60@gmail.com>
+Date:   Thu Apr 20 22:47:01 2023 +0630
+
+    fix slider, add phone
+
+[33mcommit 1a5b48215c582ebab25e9d17c1cb6ca9876a7cf3[m
+Author: mical <micaljohn60@gmail.com>
+Date:   Thu Feb 16 21:32:09 2023 +0630
+
+    fix auth bug ui
+
+[33mcommit d7f49590a7d090951361b652a38ac2c06d0a5b9a[m
+Author: mical <micaljohn60@gmail.com>
+Date:   Thu Jan 19 23:50:47 2023 +0630
+
+    add wishilt, error message, about us
+
+[33mcommit 6fe37c23004ee4009e5358b1127233be94350ee7[m
+Author: mical <micaljohn60@gmail.com>
+Date:   Sat Nov 19 18:55:54 2022 +0630
+
+    add auth, fetch, products, category, stores, and detail
+
+[33mcommit 967f6ca00966178a7da8a2d138869f5f6c16c587[m
+Author: mical <micaljohn60@gmail.com>
+Date:   Sun Oct 23 21:58:30 2022 +0630
+
+    configure frontend
+
+[33mcommit 86b84dd11db74365bb09b5b81d226da54c735dd3[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m
+Author: mical <micaljohn60@gmail.com>
+Date:   Wed Sep 28 20:52:52 2022 +0630
+
+    Mid push, implemented design frame

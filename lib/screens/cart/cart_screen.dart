@@ -304,22 +304,30 @@ class _CartScreenState extends State<CartScreen> {
                 ],
               ),
               Positioned(
-                bottom: 5,
+                bottom: 0,
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: GestureDetector(
                     onTap: () {
-                      Provider.of<CheckOutProvider>(context, listen: false)
-                          .getAddress(_token);
-                      if (dataList.isNotEmpty) {
+                      final provider =
+                          Provider.of<CheckOutProvider>(context, listen: false);
+                      provider.getAddress(_token);
+
+                      if (dataList.isNotEmpty && provider.address != null) {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => CheckOutScreen(
                                 cartDataList: dataList, token: _token),
                           ),
                         );
-                      } else {
+                      } else if (dataList.isEmpty) {
                         showToastMessage("You Have Nothing To Check Out");
+                      } else {
+                        const Center(
+                          child: CircularProgressIndicator(
+                            color: primaryBackgroundColor,
+                          ),
+                        );
                       }
                     },
                     child: Container(

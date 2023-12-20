@@ -88,6 +88,7 @@ class _RelatedProductsState extends State<RelatedProducts> {
                                 onTap: () {
                                   pushNewScreen(context,
                                       screen: ProductDetail(
+                                        userId: widget.userId,
                                         favItems: [],
                                         id: value.map["products"][index]["id"],
                                         title: value.map["products"][index]

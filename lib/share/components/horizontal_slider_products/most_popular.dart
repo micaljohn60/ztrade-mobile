@@ -62,6 +62,7 @@ class HorizontalSliderProducts extends StatelessWidget {
                     pushNewScreen(
                       context,
                       screen: ProductDetail(
+                        userId: userId,
                         id: products[index]["id"],
                         title: products[index]["name"],
                         price: calculatePrice(products[index]["price"],
@@ -91,15 +92,16 @@ class HorizontalSliderProducts extends StatelessWidget {
                       child: Column(
                         children: [
                           Container(
-                              width: size.width / 2.1,
-                              alignment: Alignment.centerRight,
-                              child: Heart(
-                                userId: userId,
-                                productId: products[index]["id"].toString(),
-                                wishLists: wishLists,
-                                isWishList: checkInWishList(wishLists,
-                                    products[index]["id"].toString()),
-                              )),
+                            width: size.width / 2.1,
+                            alignment: Alignment.centerRight,
+                            child: Heart(
+                              userId: userId,
+                              productId: products[index]["id"].toString(),
+                              wishLists: wishLists,
+                              isWishList: checkInWishList(
+                                  wishLists, products[index]["id"].toString()),
+                            ),
+                          ),
                           ProductImage(
                             imgUrl: ZtradeAPI.productImageUrl +
                                 products[index]["product_image"][0]
