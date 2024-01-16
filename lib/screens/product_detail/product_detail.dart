@@ -152,12 +152,11 @@ class _ProductDetailState extends State<ProductDetail> {
               ),
               Visibility(
                 visible: widget.userId != null,
-                child: Positioned(
-                  bottom: 15,
-                  left: 0,
-                  right: 0,
+                child: Align(
+                  alignment: Alignment.bottomCenter,
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 12, vertical: 16),
                     child: Selector<AddToCartNotifier, int>(
                       selector: (_, notifier) => notifier.quantity,
                       builder: (_, notifier, __) => Row(
@@ -224,9 +223,9 @@ class _ProductDetailState extends State<ProductDetail> {
                                 instance.addToCart(widget.id, notifier, _token);
                                 instance.getCartsFromAPI(_token);
                                 provider.getAddress(_token);
-                                setState(() {
-                                  instance.cartDataList;
-                                });
+                                // setState(() {
+                                //   instance.cartDataList;
+                                // });
 
                                 showToastMessage(
                                     "${widget.title} is successfully adding to cart");

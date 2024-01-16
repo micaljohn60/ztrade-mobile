@@ -74,6 +74,9 @@ class AddToCartNotifier extends ChangeNotifier {
           "quantity": quantity.toString()
         },
       );
+      print(
+          "this is response status code add to cart===>${response.statusCode}");
+      print("this is response body code add to cart===>${response.body}");
       if (response.statusCode == 201) {
         final responseBody = json.decode(response.body);
         isSuccessToAdd = responseBody["status"];
@@ -92,15 +95,17 @@ class AddToCartNotifier extends ChangeNotifier {
 
   // cart items from network
   getCartsFromAPI(String token) async {
-    const String url = "http://api.ztrademm.com/api/cart";
+    const String url = "https://api.ztrademm.com/api/cart";
     try {
       Response response = await http.get(
         Uri.parse(url),
         headers: {
           "Authorization": "Bearer $token",
+          "Content-Type": "application/json",
         },
       );
-
+      print("this is response status code get cart===>${response.statusCode}");
+      print("this is response body code get cart===>${response.body}");
       if (response.statusCode == 201) {
         print('Data request successfully: ${response.body}');
         _cartList = cartsFromJson(response.body).data;

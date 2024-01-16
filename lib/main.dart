@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:omni_mobile_app/constants/hive_constant.dart';
-import 'package:omni_mobile_app/persistent/cart_data_dao/cart_data_dao.dart';
 import 'package:omni_mobile_app/providers/add_to_cart/add_to_cart_provider.dart';
 import 'package:omni_mobile_app/providers/check_out_provider/check_out_provider.dart';
 import 'package:omni_mobile_app/screens/auth/authenticate.dart';
-import 'package:omni_mobile_app/screens/auth/login.dart';
 import 'package:omni_mobile_app/screens/auth/register.dart';
 import 'package:omni_mobile_app/screens/splash_screen/splash_screen.dart';
 import 'package:omni_mobile_app/services/aboutus/aboutus_service.dart';
@@ -22,7 +19,6 @@ import 'package:omni_mobile_app/services/search/search_suggestion.dart';
 import 'package:omni_mobile_app/services/slider/carousel_slider_service.dart';
 import 'package:omni_mobile_app/services/wishlist_service/user_wishlist_service.dart';
 import 'package:provider/provider.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

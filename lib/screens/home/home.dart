@@ -268,6 +268,7 @@ class _HomeState extends State<Home> {
                                   ),
                                   ImageSlider(images: value.map["sliders"]),
                                   CategoryItems(
+                                    userID: newValue,
                                     isHomePage: false,
                                     wishLists: value.map["wishlist"] ?? [],
                                   ),

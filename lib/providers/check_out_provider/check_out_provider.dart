@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart';
 import 'package:http/http.dart' as http;
-import 'package:omni_mobile_app/model/vo/data_vo/data_vo.dart';
 
 import '../../model/vo/address_vo/address.dart';
 
@@ -34,7 +33,7 @@ class CheckOutProvider extends ChangeNotifier {
 
   //adding item to cart
   addAddress(String token) async {
-    const String endpoint = "http://api.ztrademm.com/api/address";
+    const String endpoint = "https://api.ztrademm.com/api/address";
     final url = Uri.parse(endpoint);
 
     final headers = {
@@ -72,7 +71,7 @@ class CheckOutProvider extends ChangeNotifier {
 
   //address from network
   getAddress(String token) async {
-    const String url = "http://api.ztrademm.com/api/address";
+    const String url = "https://api.ztrademm.com/api/address";
     try {
       Response response = await http.get(
         Uri.parse(url),
@@ -96,7 +95,7 @@ class CheckOutProvider extends ChangeNotifier {
   }
 
   orderCheckOut(String token, String payment) async {
-    const String endpoint = "http://api.ztrademm.com/api/checkout";
+    const String endpoint = "https://api.ztrademm.com/api/checkout";
     final url = Uri.parse(endpoint);
 
     final headers = {

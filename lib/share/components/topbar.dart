@@ -39,7 +39,6 @@ class _TopBarState extends State<TopBar> {
   @override
   void initState() {
     readToken();
-
     super.initState();
   }
 
@@ -182,7 +181,7 @@ class _TopBarState extends State<TopBar> {
                 elevation: 0,
                 ignorePointer: false,
                 badgeContent: Text(
-                  '${notifier.cartDataList.length}',
+                  '${context.watch<AddToCartNotifier>().cartDataList.length}',
                   style: appStyle(12, FontWeight.w300, Colors.white),
                 ),
                 animationType: BadgeAnimationType.fade,
