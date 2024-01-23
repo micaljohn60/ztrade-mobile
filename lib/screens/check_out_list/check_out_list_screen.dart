@@ -52,8 +52,11 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
             ],
           ),
         );
+
+    bool isAddress = (!checkOut.isLoading && checkOut.address != null);
+    print("this is isAddress =====================> $isAddress");
     return Scaffold(
-        body: (checkOut.isLoading && checkOut.address != null)
+        body: !isAddress
             ? loadingUI()
             : SingleChildScrollView(
                 child: Column(
@@ -96,532 +99,470 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  (checkOut.isLoading)
-                                      ? const SizedBox()
-                                      : GestureDetector(
-                                          onTap: () {
-                                            showModalBottomSheet(
-                                              context: context,
-                                              isScrollControlled: true,
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              barrierColor: Colors.white54,
-                                              builder: (context) =>
-                                                  SingleChildScrollView(
-                                                child: Container(
-                                                  width: MediaQuery.of(context)
-                                                      .size
-                                                      .width,
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    color:
-                                                        primaryBackgroundColor,
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                      topLeft:
-                                                          Radius.circular(12),
-                                                      topRight:
-                                                          Radius.circular(12),
+                                  GestureDetector(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled: true,
+                                        backgroundColor: Colors.transparent,
+                                        barrierColor: Colors.white54,
+                                        builder: (context) =>
+                                            SingleChildScrollView(
+                                          child: Container(
+                                            width: MediaQuery.of(context)
+                                                .size
+                                                .width,
+                                            decoration: const BoxDecoration(
+                                              color: primaryBackgroundColor,
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(12),
+                                                topRight: Radius.circular(12),
+                                              ),
+                                            ),
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(12.0),
+                                              child: Form(
+                                                key: _formKey,
+                                                child: Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    const SizedBox(
+                                                      height: 15,
                                                     ),
-                                                  ),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            12.0),
-                                                    child: Form(
-                                                      key: _formKey,
-                                                      child: Column(
-                                                        mainAxisAlignment:
-                                                            MainAxisAlignment
-                                                                .start,
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          const SizedBox(
-                                                            height: 15,
-                                                          ),
-                                                          Text(
-                                                            "Input Your Location",
-                                                            style: appStyle(
-                                                                18,
-                                                                FontWeight.bold,
-                                                                Colors.white),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 20,
-                                                          ),
-                                                          Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors.grey
-                                                                  .shade100,
-                                                              borderRadius:
-                                                                  const BorderRadius
-                                                                          .all(
-                                                                      Radius.circular(
-                                                                          12)),
-                                                            ),
-                                                            child:
-                                                                TextFormField(
-                                                              validator: (text) =>
-                                                                  text.isEmpty
-                                                                      ? "Need to Input Street"
-                                                                      : null,
-                                                              keyboardType:
-                                                                  TextInputType
-                                                                      .name,
-                                                              autofocus: false,
-                                                              controller: notifier
-                                                                  .streetController,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                hintText:
-                                                                    'Street',
-                                                                hintStyle: TextStyle(
-                                                                    color: Colors
-                                                                        .grey),
-                                                                focusColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fillColor: Colors
-                                                                    .transparent,
-                                                                filled: true,
-                                                                enabled: true,
-                                                                border:
-                                                                    InputBorder
-                                                                        .none,
-                                                                hoverColor:
-                                                                    Colors
-                                                                        .yellow,
-                                                                enabledBorder:
-                                                                    InputBorder
-                                                                        .none,
-                                                                focusedBorder:
-                                                                    InputBorder
-                                                                        .none,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 20,
-                                                          ),
-                                                          Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors.grey
-                                                                  .shade100,
-                                                              borderRadius:
-                                                                  const BorderRadius
-                                                                          .all(
-                                                                      Radius.circular(
-                                                                          12)),
-                                                            ),
-                                                            child:
-                                                                TextFormField(
-                                                              validator: (text) =>
-                                                                  text.isEmpty
-                                                                      ? "Need to Input City"
-                                                                      : null,
-                                                              keyboardType:
-                                                                  TextInputType
-                                                                      .name,
-                                                              autofocus: false,
-                                                              controller: notifier
-                                                                  .cityController,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                hintText:
-                                                                    'City',
-                                                                hintStyle: TextStyle(
-                                                                    color: Colors
-                                                                        .grey),
-                                                                focusColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fillColor: Colors
-                                                                    .transparent,
-                                                                filled: true,
-                                                                enabled: true,
-                                                                border:
-                                                                    InputBorder
-                                                                        .none,
-                                                                hoverColor:
-                                                                    Colors
-                                                                        .yellow,
-                                                                enabledBorder:
-                                                                    InputBorder
-                                                                        .none,
-                                                                focusedBorder:
-                                                                    InputBorder
-                                                                        .none,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 20,
-                                                          ),
-                                                          Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors.grey
-                                                                  .shade100,
-                                                              borderRadius:
-                                                                  const BorderRadius
-                                                                          .all(
-                                                                      Radius.circular(
-                                                                          12)),
-                                                            ),
-                                                            child:
-                                                                TextFormField(
-                                                              validator: (text) =>
-                                                                  text.isEmpty
-                                                                      ? "Need to Input State"
-                                                                      : null,
-                                                              keyboardType:
-                                                                  TextInputType
-                                                                      .emailAddress,
-                                                              autofocus: false,
-                                                              controller: notifier
-                                                                  .stateController,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                hintText:
-                                                                    'State',
-                                                                hintStyle: TextStyle(
-                                                                    color: Colors
-                                                                        .grey),
-                                                                focusColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fillColor: Colors
-                                                                    .transparent,
-                                                                filled: true,
-                                                                enabled: true,
-                                                                border:
-                                                                    InputBorder
-                                                                        .none,
-                                                                hoverColor:
-                                                                    Colors
-                                                                        .yellow,
-                                                                enabledBorder:
-                                                                    InputBorder
-                                                                        .none,
-                                                                focusedBorder:
-                                                                    InputBorder
-                                                                        .none,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 20,
-                                                          ),
-                                                          Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors.grey
-                                                                  .shade100,
-                                                              borderRadius:
-                                                                  const BorderRadius
-                                                                          .all(
-                                                                      Radius.circular(
-                                                                          12)),
-                                                            ),
-                                                            child:
-                                                                TextFormField(
-                                                              validator: (text) =>
-                                                                  text.isEmpty
-                                                                      ? "Need to Input Country"
-                                                                      : null,
-                                                              keyboardType:
-                                                                  TextInputType
-                                                                      .name,
-                                                              autofocus: false,
-                                                              controller: notifier
-                                                                  .countryController,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                hintText:
-                                                                    'Country',
-                                                                hintStyle: TextStyle(
-                                                                    color: Colors
-                                                                        .grey),
-                                                                focusColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fillColor: Colors
-                                                                    .transparent,
-                                                                filled: true,
-                                                                enabled: true,
-                                                                border:
-                                                                    InputBorder
-                                                                        .none,
-                                                                hoverColor:
-                                                                    Colors
-                                                                        .yellow,
-                                                                enabledBorder:
-                                                                    InputBorder
-                                                                        .none,
-                                                                focusedBorder:
-                                                                    InputBorder
-                                                                        .none,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 20,
-                                                          ),
-                                                          Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors.grey
-                                                                  .shade100,
-                                                              borderRadius:
-                                                                  const BorderRadius
-                                                                          .all(
-                                                                      Radius.circular(
-                                                                          12)),
-                                                            ),
-                                                            child:
-                                                                TextFormField(
-                                                              validator: (text) =>
-                                                                  (text.isEmpty &&
-                                                                          text.length <
-                                                                              6)
-                                                                      ? "Need to Input Postal Code"
-                                                                      : null,
-                                                              keyboardType:
-                                                                  TextInputType
-                                                                      .number,
-                                                              autofocus: false,
-                                                              controller: notifier
-                                                                  .postalCodeController,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                hintText:
-                                                                    'Postal Code',
-                                                                hintStyle: TextStyle(
-                                                                    color: Colors
-                                                                        .grey),
-                                                                focusColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fillColor: Colors
-                                                                    .transparent,
-                                                                filled: true,
-                                                                enabled: true,
-                                                                border:
-                                                                    InputBorder
-                                                                        .none,
-                                                                hoverColor:
-                                                                    Colors
-                                                                        .yellow,
-                                                                enabledBorder:
-                                                                    InputBorder
-                                                                        .none,
-                                                                focusedBorder:
-                                                                    InputBorder
-                                                                        .none,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 20,
-                                                          ),
-                                                          Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors.grey
-                                                                  .shade100,
-                                                              borderRadius:
-                                                                  const BorderRadius
-                                                                          .all(
-                                                                      Radius.circular(
-                                                                          12)),
-                                                            ),
-                                                            child:
-                                                                TextFormField(
-                                                              validator: (text) => (text
-                                                                          .isEmpty ||
-                                                                      text.startsWith(
-                                                                          "09"))
-                                                                  ? "Need to Input Phone Number and It should be start with 09xxxxxxxxx"
-                                                                  : null,
-                                                              controller: notifier
-                                                                  .phoneController,
-                                                              keyboardType:
-                                                                  TextInputType
-                                                                      .phone,
-                                                              autofocus: false,
-                                                              decoration:
-                                                                  const InputDecoration(
-                                                                hintText:
-                                                                    'Phone Number',
-                                                                hintStyle: TextStyle(
-                                                                    color: Colors
-                                                                        .grey),
-                                                                focusColor:
-                                                                    Colors
-                                                                        .white,
-                                                                fillColor: Colors
-                                                                    .transparent,
-                                                                filled: true,
-                                                                enabled: true,
-                                                                border:
-                                                                    InputBorder
-                                                                        .none,
-                                                                hoverColor:
-                                                                    Colors
-                                                                        .yellow,
-                                                                enabledBorder:
-                                                                    InputBorder
-                                                                        .none,
-                                                                focusedBorder:
-                                                                    InputBorder
-                                                                        .none,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          const SizedBox(
-                                                            height: 20,
-                                                          ),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              GestureDetector(
-                                                                onTap: () {
-                                                                  Navigator.of(
-                                                                          context)
-                                                                      .pop();
-                                                                },
-                                                                child:
-                                                                    Container(
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(12),
-                                                                  decoration:
-                                                                      const BoxDecoration(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .all(
-                                                                      Radius.circular(
-                                                                          12),
-                                                                    ),
-                                                                  ),
-                                                                  child: Text(
-                                                                    "Close ",
-                                                                    style: appStyle(
-                                                                        16,
-                                                                        FontWeight
-                                                                            .bold,
-                                                                        primaryTextColor),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                              GestureDetector(
-                                                                onTap: () {
-                                                                  if (_formKey
-                                                                      .currentState
-                                                                      .validate()) {
-                                                                    notifier.addAddress(
-                                                                        widget
-                                                                            .token);
-                                                                    notifier.getAddress(
-                                                                        widget
-                                                                            .token);
-                                                                    _formKey
-                                                                        .currentState
-                                                                        .save();
-                                                                    Navigator.of(
-                                                                            context)
-                                                                        .pop();
-                                                                  } else {
-                                                                    showToastMessage(
-                                                                        "You need to add your location");
-                                                                  }
-                                                                },
-                                                                child:
-                                                                    Container(
-                                                                  margin: const EdgeInsets
-                                                                      .symmetric(
-                                                                    horizontal:
-                                                                        12,
-                                                                  ),
-                                                                  alignment:
-                                                                      Alignment
-                                                                          .center,
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(12),
-                                                                  decoration:
-                                                                      const BoxDecoration(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    borderRadius:
-                                                                        BorderRadius
-                                                                            .all(
-                                                                      Radius.circular(
-                                                                          12),
-                                                                    ),
-                                                                  ),
-                                                                  child: Text(
-                                                                    "Confirm ",
-                                                                    style: appStyle(
-                                                                        16,
-                                                                        FontWeight
-                                                                            .bold,
-                                                                        primaryTextColor),
-                                                                  ),
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          )
-                                                        ],
+                                                    Text(
+                                                      "Input Your Location",
+                                                      style: appStyle(
+                                                          18,
+                                                          FontWeight.bold,
+                                                          Colors.white),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 20,
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .grey.shade100,
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                    .all(
+                                                                Radius.circular(
+                                                                    12)),
+                                                      ),
+                                                      child: TextFormField(
+                                                        validator: (text) => text
+                                                                .isEmpty
+                                                            ? "Need to Input Street"
+                                                            : null,
+                                                        keyboardType:
+                                                            TextInputType.name,
+                                                        autofocus: false,
+                                                        controller: notifier
+                                                            .streetController,
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          hintText: 'Street',
+                                                          hintStyle: TextStyle(
+                                                              color:
+                                                                  Colors.grey),
+                                                          focusColor:
+                                                              Colors.white,
+                                                          fillColor: Colors
+                                                              .transparent,
+                                                          filled: true,
+                                                          enabled: true,
+                                                          border:
+                                                              InputBorder.none,
+                                                          hoverColor:
+                                                              Colors.yellow,
+                                                          enabledBorder:
+                                                              InputBorder.none,
+                                                          focusedBorder:
+                                                              InputBorder.none,
+                                                        ),
                                                       ),
                                                     ),
-                                                  ),
+                                                    const SizedBox(
+                                                      height: 20,
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .grey.shade100,
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                    .all(
+                                                                Radius.circular(
+                                                                    12)),
+                                                      ),
+                                                      child: TextFormField(
+                                                        validator: (text) => text
+                                                                .isEmpty
+                                                            ? "Need to Input City"
+                                                            : null,
+                                                        keyboardType:
+                                                            TextInputType.name,
+                                                        autofocus: false,
+                                                        controller: notifier
+                                                            .cityController,
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          hintText: 'City',
+                                                          hintStyle: TextStyle(
+                                                              color:
+                                                                  Colors.grey),
+                                                          focusColor:
+                                                              Colors.white,
+                                                          fillColor: Colors
+                                                              .transparent,
+                                                          filled: true,
+                                                          enabled: true,
+                                                          border:
+                                                              InputBorder.none,
+                                                          hoverColor:
+                                                              Colors.yellow,
+                                                          enabledBorder:
+                                                              InputBorder.none,
+                                                          focusedBorder:
+                                                              InputBorder.none,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 20,
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .grey.shade100,
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                    .all(
+                                                                Radius.circular(
+                                                                    12)),
+                                                      ),
+                                                      child: TextFormField(
+                                                        validator: (text) => text
+                                                                .isEmpty
+                                                            ? "Need to Input State"
+                                                            : null,
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .emailAddress,
+                                                        autofocus: false,
+                                                        controller: notifier
+                                                            .stateController,
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          hintText: 'State',
+                                                          hintStyle: TextStyle(
+                                                              color:
+                                                                  Colors.grey),
+                                                          focusColor:
+                                                              Colors.white,
+                                                          fillColor: Colors
+                                                              .transparent,
+                                                          filled: true,
+                                                          enabled: true,
+                                                          border:
+                                                              InputBorder.none,
+                                                          hoverColor:
+                                                              Colors.yellow,
+                                                          enabledBorder:
+                                                              InputBorder.none,
+                                                          focusedBorder:
+                                                              InputBorder.none,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 20,
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .grey.shade100,
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                    .all(
+                                                                Radius.circular(
+                                                                    12)),
+                                                      ),
+                                                      child: TextFormField(
+                                                        validator: (text) => text
+                                                                .isEmpty
+                                                            ? "Need to Input Country"
+                                                            : null,
+                                                        keyboardType:
+                                                            TextInputType.name,
+                                                        autofocus: false,
+                                                        controller: notifier
+                                                            .countryController,
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          hintText: 'Country',
+                                                          hintStyle: TextStyle(
+                                                              color:
+                                                                  Colors.grey),
+                                                          focusColor:
+                                                              Colors.white,
+                                                          fillColor: Colors
+                                                              .transparent,
+                                                          filled: true,
+                                                          enabled: true,
+                                                          border:
+                                                              InputBorder.none,
+                                                          hoverColor:
+                                                              Colors.yellow,
+                                                          enabledBorder:
+                                                              InputBorder.none,
+                                                          focusedBorder:
+                                                              InputBorder.none,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 20,
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .grey.shade100,
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                    .all(
+                                                                Radius.circular(
+                                                                    12)),
+                                                      ),
+                                                      child: TextFormField(
+                                                        validator: (text) => (text
+                                                                    .isEmpty &&
+                                                                text.length < 6)
+                                                            ? "Need to Input Postal Code"
+                                                            : null,
+                                                        keyboardType:
+                                                            TextInputType
+                                                                .number,
+                                                        autofocus: false,
+                                                        controller: notifier
+                                                            .postalCodeController,
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          hintText:
+                                                              'Postal Code',
+                                                          hintStyle: TextStyle(
+                                                              color:
+                                                                  Colors.grey),
+                                                          focusColor:
+                                                              Colors.white,
+                                                          fillColor: Colors
+                                                              .transparent,
+                                                          filled: true,
+                                                          enabled: true,
+                                                          border:
+                                                              InputBorder.none,
+                                                          hoverColor:
+                                                              Colors.yellow,
+                                                          enabledBorder:
+                                                              InputBorder.none,
+                                                          focusedBorder:
+                                                              InputBorder.none,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 20,
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        color: Colors
+                                                            .grey.shade100,
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                    .all(
+                                                                Radius.circular(
+                                                                    12)),
+                                                      ),
+                                                      child: TextFormField(
+                                                        validator: (text) => (text
+                                                                .isEmpty)
+                                                            ? "Need to Input Phone Number and It should be start with 09xxxxxxxxx"
+                                                            : null,
+                                                        controller: notifier
+                                                            .phoneController,
+                                                        keyboardType:
+                                                            TextInputType.phone,
+                                                        autofocus: false,
+                                                        decoration:
+                                                            const InputDecoration(
+                                                          hintText:
+                                                              'Phone Number',
+                                                          hintStyle: TextStyle(
+                                                              color:
+                                                                  Colors.grey),
+                                                          focusColor:
+                                                              Colors.white,
+                                                          fillColor: Colors
+                                                              .transparent,
+                                                          filled: true,
+                                                          enabled: true,
+                                                          border:
+                                                              InputBorder.none,
+                                                          hoverColor:
+                                                              Colors.yellow,
+                                                          enabledBorder:
+                                                              InputBorder.none,
+                                                          focusedBorder:
+                                                              InputBorder.none,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(
+                                                      height: 20,
+                                                    ),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: Container(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(12),
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .all(
+                                                                Radius.circular(
+                                                                    12),
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              "Close",
+                                                              style: appStyle(
+                                                                  16,
+                                                                  FontWeight
+                                                                      .bold,
+                                                                  primaryTextColor),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            if (_formKey
+                                                                .currentState
+                                                                .validate()) {
+                                                              notifier.addAddress(
+                                                                  widget.token);
+                                                              notifier.getAddress(
+                                                                  widget.token);
+                                                              _formKey
+                                                                  .currentState
+                                                                  .save();
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                              print(
+                                                                  "this is confirm");
+                                                            } else {
+                                                              showToastMessage(
+                                                                  "You need to add your location");
+                                                            }
+                                                          },
+                                                          child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .symmetric(
+                                                              horizontal: 12,
+                                                            ),
+                                                            alignment: Alignment
+                                                                .center,
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(12),
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                              color:
+                                                                  Colors.white,
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .all(
+                                                                Radius.circular(
+                                                                    12),
+                                                              ),
+                                                            ),
+                                                            child: Text(
+                                                              "Confirm ",
+                                                              style: appStyle(
+                                                                  16,
+                                                                  FontWeight
+                                                                      .bold,
+                                                                  primaryTextColor),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  ],
                                                 ),
                                               ),
-                                            );
-                                          },
-                                          child: const Icon(
-                                            UniconsLine.edit,
-                                            size: 18.0,
-                                            color: primaryButtonColor,
+                                            ),
                                           ),
-                                        ),
-                                  const SizedBox(width: 10),
-                                  Consumer<CheckOutProvider>(
-                                    builder: (context, notifier, child) {
-                                      final street =
-                                          notifier.address.data.street;
-                                      final state = notifier.address.data.state;
-                                      final city = notifier.address.data.city;
-                                      final postalCode =
-                                          notifier.address.data.postalCode;
-                                      final country =
-                                          notifier.address.data.country;
-                                      return Flexible(
-                                        child: Text(
-                                          notifier.address.data == null
-                                              ? "Choose Location"
-                                              : '$street - $state - $city - $country - $postalCode',
-                                          style: appStyle(13, FontWeight.w500,
-                                              primaryTextColor),
-                                          // overflow: TextOverflow.ellipsis,
-
-                                          maxLines: 2,
                                         ),
                                       );
                                     },
+                                    child: const Icon(
+                                      UniconsLine.edit,
+                                      size: 18.0,
+                                      color: primaryButtonColor,
+                                    ),
                                   ),
+                                  const SizedBox(width: 10),
+                                  isAddress
+                                      ? Consumer<CheckOutProvider>(
+                                          builder: (context, notifier, child) {
+                                            final street =
+                                                notifier.address.data.street;
+                                            final state =
+                                                notifier.address.data.state;
+                                            final city =
+                                                notifier.address.data.city;
+                                            final postalCode = notifier
+                                                .address.data.postalCode;
+                                            final country =
+                                                notifier.address.data.country;
+                                            return Flexible(
+                                              child: Text(
+                                                notifier.address.data == null
+                                                    ? "Choose Location"
+                                                    : '$street - $state - $city - $country - $postalCode',
+                                                style: appStyle(
+                                                    13,
+                                                    FontWeight.w500,
+                                                    primaryTextColor),
+                                                // overflow: TextOverflow.ellipsis,
+
+                                                maxLines: 2,
+                                              ),
+                                            );
+                                          },
+                                        )
+                                      : const Text("Input Your Location"),
                                 ],
                               ),
                             );
@@ -642,11 +583,13 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                     color: primaryButtonColor,
                                   ),
                                   const SizedBox(width: 10),
-                                  Text(
-                                      notifier.address.data.phone ??
-                                          "Your Phone Number",
-                                      style: appStyle(14, FontWeight.w500,
-                                          primaryTextColor)),
+                                  isAddress
+                                      ? Text(
+                                          notifier.address.data.phone ??
+                                              "Your Phone Number",
+                                          style: appStyle(14, FontWeight.w500,
+                                              primaryTextColor))
+                                      : const Text("Phone Number"),
                                 ],
                               ),
                             );
@@ -871,11 +814,16 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                       builder: (_, notifier, __) {
                         return GestureDetector(
                           onTap: () {
-                            notifier.orderCheckOut(widget.token, 'cod');
-                            showToastMessage("Order Check Out Successful");
-                            Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => Home(),
-                            ));
+                            if (isAddress) {
+                              notifier.orderCheckOut(widget.token, 'cod');
+                              showToastMessage("Order Check Out Successful");
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => Home(),
+                              ));
+                            } else {
+                              showToastMessage(
+                                  "You need to input Your Location For Order Confirm");
+                            }
                           },
                           child: Container(
                             margin: const EdgeInsets.symmetric(

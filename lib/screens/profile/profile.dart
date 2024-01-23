@@ -54,16 +54,18 @@ class _ProfileState extends State<Profile> {
   }
 
   void _launchUrl() async {
-
-    if (!await launchUrl(_privacyurl,mode: LaunchMode.externalApplication)) throw 'Could not launch $_privacyurl';
+    if (!await launchUrl(_privacyurl, mode: LaunchMode.externalApplication))
+      throw 'Could not launch $_privacyurl';
   }
 
   void _launchUrl2() async {
-    if (!await launchUrl(_termsurl,mode: LaunchMode.externalApplication)) throw 'Could not launch $_termsurl';
+    if (!await launchUrl(_termsurl, mode: LaunchMode.externalApplication))
+      throw 'Could not launch $_termsurl';
   }
 
   void _launchUrl3() async {
-    if (!await launchUrl(_deleteAccount,mode: LaunchMode.externalApplication)) throw 'Could not launch $_deleteAccount';
+    if (!await launchUrl(_deleteAccount, mode: LaunchMode.externalApplication))
+      throw 'Could not launch $_deleteAccount';
   }
 
   @override
@@ -138,7 +140,7 @@ class _ProfileState extends State<Profile> {
                     await context.read<UserService>().fetchData(widget.token);
                   },
                   child: Consumer<UserService>(
-                    builder: ((context, value, child) {
+                    builder: (context, value, child) {
                       return value.map.length == 0 && !value.error
                           ? Center(
                               child: CircularProgressIndicator(
@@ -183,12 +185,11 @@ class _ProfileState extends State<Profile> {
                                                                       as ImageProvider
                                                                   : AssetImage(
                                                                       image)
-                                                              : NetworkImage(
-                                                                  "https://api.ztrademm.com/storage/profile_pictures/" +
-                                                                      value.map[
-                                                                              "user"]
+                                                              : NetworkImage("https://api.ztrademm.com/storage/profile_pictures/" +
+                                                                  (value.map["user"]
                                                                           [
-                                                                          "profile_pic"]),
+                                                                          "profile_pic"])
+                                                                      .toString()),
                                                           fit: BoxFit.contain),
                                                       border: Border.all(
                                                           color:
@@ -542,8 +543,6 @@ class _ProfileState extends State<Profile> {
                                             ),
                                           ),
                                         ),
-
-                                        
                                         Container(
                                           width:
                                               MediaQuery.of(context).size.width,
@@ -585,59 +584,60 @@ class _ProfileState extends State<Profile> {
                                             ),
                                           ),
                                         ),
-                                        
-                                        value.map["user"]["name"] == "admin" ?
-
-                                        Container(
-                                          width:
-                                              MediaQuery.of(context).size.width,
-                                          height: 50.0,
-                                          decoration: const BoxDecoration(
-                                            border: Border(
-                                              top: BorderSide(
-                                                  color: primaryBackgroundColor,
-                                                  width: 2.0),
-                                              bottom: BorderSide(
-                                                  color: primaryBackgroundColor,
-                                                  width: 2.0),
-                                            ),
-                                          ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: InkWell(
-                                              onTap: _launchUrl3,
-                                              child: Row(
-                                                children: [
-                                                  const Icon(
-                                                    Icons.document_scanner,
-                                                    color: Colors.red
-                                                  ,
+                                        value.map["user"]["name"] == "admin"
+                                            ? Container(
+                                                width: MediaQuery.of(context)
+                                                    .size
+                                                    .width,
+                                                height: 50.0,
+                                                decoration: const BoxDecoration(
+                                                  border: Border(
+                                                    top: BorderSide(
+                                                        color:
+                                                            primaryBackgroundColor,
+                                                        width: 2.0),
+                                                    bottom: BorderSide(
+                                                        color:
+                                                            primaryBackgroundColor,
+                                                        width: 2.0),
                                                   ),
-                                                  Padding(
-                                                    padding:
-                                                        const EdgeInsets.only(
-                                                            left: 8.0),
-                                                    child: Text(
-                                                      "Delete Account",
-                                                      style:
-                                                          GoogleFonts.poppins(
-                                                              fontSize: 18.0),
+                                                ),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: InkWell(
+                                                    onTap: _launchUrl3,
+                                                    child: Row(
+                                                      children: [
+                                                        const Icon(
+                                                          Icons
+                                                              .document_scanner,
+                                                          color: Colors.red,
+                                                        ),
+                                                        Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 8.0),
+                                                          child: Text(
+                                                            "Delete Account",
+                                                            style: GoogleFonts
+                                                                .poppins(
+                                                                    fontSize:
+                                                                        18.0),
+                                                          ),
+                                                        )
+                                                      ],
                                                     ),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                        :
-                                        Container()
-
-                                        
+                                                  ),
+                                                ),
+                                              )
+                                            : Container()
                                       ],
                                     ),
                                   ),
                                 ));
-                    }),
+                    },
                   ),
                 ),
               );
